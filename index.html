@@ -1,0 +1,2260 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WPVelo — WordPress Management Platform</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' rx='28' fill='url(#gf)'/><path d='M32 34 L60 82 L88 34' stroke='#07090d' stroke-width='8' stroke-linecap='round' stroke-linejoin='round' fill='none'/><circle cx='60' cy='82' r='6' fill='#07090d'/><path d='M20 98 L38 98 L44 88 L60 108 L76 74 L82 98 L100 98' stroke='#07090d' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round' fill='none' opacity='0.45'/><defs><linearGradient id='gf' x1='0' y1='0' x2='120' y2='120' gradientUnits='userSpaceOnUse'><stop offset='0%' stop-color='#00e8b0'/><stop offset='100%' stop-color='#009970'/></linearGradient></defs></svg>">
+<meta name="description" content="WPVelo — Dashboard profissional de monitorização WordPress para freelancers e agências. Segurança, performance, updates e comandos remotos em tempo real.">
+<meta name="keywords" content="wordpress monitoring, wordpress dashboard, gestão wordpress, segurança wordpress, freelancer wordpress, plugin wordpress">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://wpvelo.app">
+<meta property="og:title" content="WPVelo — WordPress Management Platform">
+<meta property="og:description" content="Monitoriza, protege e gere todos os teus sites WordPress a partir de um único dashboard profissional.">
+<meta property="og:image" content="https://wpvelo.app/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WPVelo — WordPress Management Platform">
+<meta name="twitter:description" content="Monitoriza, protege e gere todos os teus sites WordPress a partir de um único dashboard profissional.">
+<link rel="canonical" href="https://wpvelo.app">
+<meta name="robots" content="index, follow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+/* ── VARIABLES ───────────────────────────────────────────── */
+:root {
+  --bg:       #07090d;
+  --s1:       #0c1018;
+  --s2:       #111820;
+  --s3:       #161f28;
+  --s4:       #1c2a36;
+  --border:   rgba(255,255,255,0.06);
+  --border2:  rgba(255,255,255,0.10);
+  --border3:  rgba(255,255,255,0.15);
+  --text:     #e2e8f0;
+  --muted:    #94a3b8;
+  --dim:      #64748b;
+  --accent:   #00d4a0;
+  --accent2:  rgba(0,212,160,0.08);
+  --accent3:  rgba(0,212,160,0.18);
+  --glow:     rgba(0,212,160,0.25);
+  --glow2:    rgba(0,212,160,0.08);
+  --blue:     #3d8eff;
+  --orange:   #ff7043;
+  --purple:   #9b7dff;
+  --fs-hero:  clamp(2.8rem, 6vw, 5.5rem);
+  --fs-h2:    clamp(1.8rem, 3.5vw, 3rem);
+  --fs-h3:    clamp(1.2rem, 2vw, 1.6rem);
+  --container: 1200px;
+  --pad:      clamp(5rem, 10vw, 9rem);
+}
+
+/* ── RESET ───────────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Figtree', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+
+/* ── NOISE OVERLAY ───────────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: .4;
+}
+
+/* ── CONTAINER ───────────────────────────────────────────── */
+.wrap { max-width: var(--container); margin: 0 auto; padding: 0 clamp(1.2rem, 4vw, 2.5rem); }
+
+/* ── NAV ─────────────────────────────────────────────────── */
+nav {
+  position: fixed;
+  top: 36px; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.2rem 0;
+  transition: background .4s, border-color .4s, backdrop-filter .4s;
+  border-bottom: 1px solid transparent;
+}
+nav.scrolled {
+  background: rgba(7,9,13,0.88);
+  backdrop-filter: blur(20px);
+  border-color: var(--border);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: -.02em;
+}
+.nav-logo-icon {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  box-shadow: 0 0 20px var(--glow);
+}
+.nav-logo span { color: var(--accent); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+.nav-links a {
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--muted);
+  transition: color .2s;
+  letter-spacing: .02em;
+}
+.nav-links a:hover { color: var(--text); }
+.nav-cta {
+  background: var(--accent);
+  color: #050e09 !important;
+  font-weight: 700 !important;
+  padding: .5rem 1.2rem;
+  border-radius: 8px;
+  transition: opacity .2s, transform .2s !important;
+}
+.nav-cta:hover { opacity: .9; transform: translateY(-1px) !important; }
+
+/* ── HAMBURGER ───────────────────────────────────────────── */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: .4rem;
+  border-radius: 6px;
+  transition: background .2s;
+  background: none;
+  border: none;
+}
+.nav-hamburger:hover { background: var(--s2); }
+.nav-hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: all .3s;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile menu overlay */
+.nav-mobile {
+  display: none;
+  position: fixed;
+  top: 101px; left: 0; right: 0;
+  background: rgba(7,9,13,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border2);
+  padding: 1.5rem;
+  z-index: 99;
+  flex-direction: column;
+  gap: .3rem;
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: all .3s;
+}
+.nav-mobile.visible {
+  display: flex;
+  transform: translateY(0);
+  opacity: 1;
+}
+.nav-mobile a {
+  display: block;
+  padding: .85rem 1rem;
+  font-size: .95rem;
+  font-weight: 500;
+  color: var(--muted);
+  border-radius: 8px;
+  transition: all .2s;
+}
+.nav-mobile a:hover { color: var(--text); background: var(--s2); }
+.nav-mobile .nav-cta-mobile {
+  background: var(--accent);
+  color: #050e09 !important;
+  font-weight: 700 !important;
+  text-align: center;
+  margin-top: .5rem;
+}
+
+/* ── VALIDATION BANNER ───────────────────────────────────── */
+.validation-banner {
+  background: linear-gradient(135deg, rgba(0,212,160,0.09), rgba(61,142,255,0.05));
+  border-bottom: 1px solid rgba(0,212,160,0.15);
+  padding: .55rem 1rem;
+  text-align: center;
+  font-size: .75rem;
+  color: var(--muted);
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 200;
+  backdrop-filter: blur(10px);
+}
+.validation-banner strong { color: var(--accent); font-weight: 700; }
+.validation-banner .val-spots {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(0,212,160,0.1);
+  border: 1px solid rgba(0,212,160,0.2);
+  border-radius: 20px;
+  padding: .15rem .7rem;
+  margin-left: .5rem;
+  font-weight: 600;
+  color: var(--accent);
+  font-size: .72rem;
+  letter-spacing: .03em;
+}
+.val-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: pulse 2s infinite; }
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 8rem;
+}
+
+/* Grid background */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,212,160,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,160,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+}
+
+/* Glow orbs */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.hero-orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,212,160,0.12) 0%, transparent 70%);
+  top: -100px; left: -100px;
+}
+.hero-orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(61,142,255,0.08) 0%, transparent 70%);
+  bottom: 0; right: -50px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 820px;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--accent2);
+  border: 1px solid var(--accent3);
+  border-radius: 20px;
+  padding: .35rem .9rem;
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+.hero-badge-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .5; transform: scale(.8); }
+}
+
+.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-hero);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+}
+.hero-title em {
+  font-style: normal;
+  color: var(--accent);
+  position: relative;
+}
+.hero-title em::after {
+  content: '';
+  position: absolute;
+  bottom: .05em;
+  left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  border-radius: 2px;
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  color: var(--muted);
+  max-width: 560px;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+  opacity: 0;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  opacity: 0;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  color: #050e09;
+  font-weight: 700;
+  font-size: .92rem;
+  padding: .85rem 1.8rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 0 30px rgba(0,212,160,0.2);
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(0,212,160,0.35);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 500;
+  font-size: .88rem;
+  padding: .85rem 1.4rem;
+  border-radius: 10px;
+  border: 1px solid var(--border2);
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  transition: all .2s;
+}
+.btn-secondary:hover {
+  border-color: var(--border3);
+  color: var(--text);
+  background: rgba(255,255,255,0.03);
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  flex-wrap: wrap;
+}
+.hero-stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -.03em;
+}
+.hero-stat-val span { color: var(--accent); }
+.hero-stat-label {
+  font-size: .72rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-top: .1rem;
+}
+.hero-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border2);
+}
+
+/* ── DASHBOARD PREVIEW ────────────────────────────────────── */
+.preview-section {
+  padding: var(--pad) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.preview-wrap {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border2);
+  box-shadow:
+    0 0 0 1px rgba(0,212,160,0.05),
+    0 40px 120px rgba(0,0,0,0.6),
+    0 0 60px rgba(0,212,160,0.06);
+}
+.preview-bar {
+  background: var(--s1);
+  border-bottom: 1px solid var(--border);
+  padding: .75rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+.preview-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+}
+.preview-dot:nth-child(1) { background: #ef4444; }
+.preview-dot:nth-child(2) { background: #fbbf24; }
+.preview-dot:nth-child(3) { background: #00d4a0; }
+.preview-url {
+  margin-left: .5rem;
+  flex: 1;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: .25rem .8rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  color: var(--dim);
+  max-width: 280px;
+}
+.preview-body {
+  background: var(--s1);
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1px;
+  min-height: 320px;
+}
+.preview-sidebar {
+  background: var(--s1);
+  border-right: 1px solid var(--border);
+  padding: 1rem .8rem;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+.preview-sb-logo {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .4rem .5rem .8rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: .4rem;
+}
+.preview-sb-icon {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+}
+.preview-sb-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .75rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.preview-sb-name span { color: var(--accent); }
+.preview-nav-item {
+  padding: .35rem .6rem;
+  border-radius: 5px;
+  font-size: .68rem;
+  color: var(--dim);
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.preview-nav-item.active {
+  background: var(--accent2);
+  color: var(--accent);
+  border: 1px solid var(--accent3);
+}
+.preview-main {
+  background: var(--bg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  overflow: hidden;
+}
+.preview-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: .5rem;
+}
+.preview-stat {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: .6rem .7rem;
+  position: relative;
+  overflow: hidden;
+}
+.preview-stat::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--c, var(--accent));
+  border-radius: 7px 7px 0 0;
+}
+.preview-stat.b { --c: var(--blue); }
+.preview-stat.o { --c: var(--orange); }
+.preview-stat.p { --c: var(--purple); }
+.preview-stat-val {
+  font-family: 'Syne', sans-serif;
+  font-size: .95rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.preview-stat-label {
+  font-size: .55rem;
+  color: var(--muted);
+  margin-top: .15rem;
+}
+.preview-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.preview-card-head {
+  padding: .5rem .7rem;
+  border-bottom: 1px solid var(--border);
+  font-size: .65rem;
+  font-weight: 600;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+}
+.preview-card-body { padding: .6rem .7rem; }
+.preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .3rem 0;
+  font-size: .6rem;
+  border-bottom: 1px solid var(--border);
+}
+.preview-row:last-child { border-bottom: none; }
+.preview-row-site {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.preview-site-dot {
+  width: 5px; height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.preview-badge {
+  padding: .1rem .4rem;
+  border-radius: 10px;
+  font-size: .5rem;
+  font-weight: 700;
+}
+.preview-badge.ok { background: var(--accent2); color: var(--accent); }
+.preview-badge.warn { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.preview-score {
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+}
+.preview-score-bar {
+  width: 40px;
+  height: 4px;
+  background: var(--s3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.preview-score-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+/* Floating cards */
+.preview-float {
+  position: absolute;
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: .8rem 1rem;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  font-size: .72rem;
+  min-width: 160px;
+}
+.preview-float-1 {
+  bottom: -20px;
+  right: -30px;
+}
+.preview-float-2 {
+  top: 60px;
+  right: -40px;
+}
+.preview-float-label {
+  font-size: .6rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .3rem;
+}
+.preview-float-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+.preview-float-sub {
+  font-size: .6rem;
+  color: var(--dim);
+  margin-top: .15rem;
+}
+.preview-float-check {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .25rem 0;
+  font-size: .62rem;
+}
+.preview-float-icon {
+  width: 14px; height: 14px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  flex-shrink: 0;
+}
+.preview-float-icon.ok { background: var(--accent2); color: var(--accent); }
+.preview-float-icon.warn { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.preview-float-icon.err { background: rgba(239,68,68,0.12); color: #ef4444; }
+
+/* ── FEATURES ─────────────────────────────────────────────── */
+.features {
+  padding: var(--pad) 0;
+  position: relative;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .68rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.section-label::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -.03em;
+  margin-bottom: 1rem;
+}
+
+.section-sub {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  margin-top: 4rem;
+}
+
+.feature-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2rem 1.8rem;
+  transition: all .35s cubic-bezier(.25,.8,.25,1);
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+.feature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  background: radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,212,160,0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.feature-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,160,0.4), transparent);
+  transform: scaleX(0);
+  transition: transform .4s cubic-bezier(.25,.8,.25,1);
+  transform-origin: left;
+}
+.feature-card:hover {
+  border-color: rgba(0,212,160,0.18);
+  background: var(--s2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,212,160,0.06);
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-card:hover::after { transform: scaleX(1); }
+
+.feature-num {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  font-weight: 500;
+  color: var(--dim);
+  letter-spacing: .1em;
+  margin-bottom: 1.2rem;
+}
+
+.feature-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 1.2rem;
+  position: relative;
+}
+.feature-icon.green { background: var(--accent2); box-shadow: 0 0 20px var(--glow2); }
+.feature-icon.blue { background: rgba(61,142,255,0.1); }
+.feature-icon.orange { background: rgba(255,112,67,0.1); }
+.feature-icon.purple { background: rgba(155,125,255,0.1); }
+.feature-icon.red { background: rgba(239,68,68,0.1); }
+.feature-icon.yellow { background: rgba(251,191,36,0.1); }
+
+.feature-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .5rem;
+  letter-spacing: -.01em;
+}
+.feature-desc {
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* ── HOW IT WORKS ─────────────────────────────────────────── */
+.how {
+  padding: var(--pad) 0;
+  position: relative;
+}
+
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  margin-top: 4rem;
+}
+
+.how-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.how-step {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.how-step:last-child { border-bottom: none; }
+
+.how-step-num {
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  color: var(--accent);
+  font-weight: 500;
+  padding-top: .3rem;
+  flex-shrink: 0;
+  width: 24px;
+}
+.how-step-title {
+  font-family: 'Syne', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  margin-bottom: .4rem;
+  letter-spacing: -.01em;
+}
+.how-step-desc {
+  font-size: .82rem;
+  color: var(--muted);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* Terminal mockup */
+.terminal {
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+}
+.terminal-bar {
+  background: var(--s2);
+  padding: .75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  border-bottom: 1px solid var(--border);
+}
+.terminal-dot { width: 9px; height: 9px; border-radius: 50%; }
+.terminal-dot:nth-child(1) { background: #ef4444; }
+.terminal-dot:nth-child(2) { background: #fbbf24; }
+.terminal-dot:nth-child(3) { background: #00d4a0; }
+.terminal-title {
+  margin-left: .4rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  color: var(--dim);
+}
+.terminal-body {
+  padding: 1.2rem 1.4rem;
+  font-family: 'DM Mono', monospace;
+  font-size: .75rem;
+  line-height: 2;
+}
+.t-dim { color: var(--dim); }
+.t-green { color: var(--accent); }
+.t-blue { color: var(--blue); }
+.t-orange { color: var(--orange); }
+.t-muted { color: var(--muted); }
+.t-white { color: var(--text); }
+.t-comment { color: var(--dim); font-style: italic; }
+
+/* ── PRICING ──────────────────────────────────────────────── */
+.pricing {
+  padding: var(--pad) 0;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 4rem;
+}
+
+.pricing-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2.2rem 2rem;
+  position: relative;
+  transition: all .35s cubic-bezier(.25,.8,.25,1);
+  overflow: hidden;
+}
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,212,160,0.05) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity .4s;
+}
+.pricing-card:hover {
+  border-color: rgba(0,212,160,0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,212,160,0.05);
+}
+.pricing-card:hover::before { opacity: 1; }
+.pricing-card.featured {
+  border-color: rgba(0,212,160,0.25);
+  background: linear-gradient(170deg, rgba(0,212,160,0.06) 0%, var(--s1) 40%);
+  box-shadow: 0 0 60px rgba(0,212,160,0.1), 0 0 0 1px rgba(0,212,160,0.1);
+}
+.pricing-card.featured::after {
+  content: 'Mais Popular';
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  color: #050e09;
+  font-size: .62rem;
+  font-weight: 800;
+  padding: .3rem 1rem;
+  border-radius: 0 0 10px 10px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.pricing-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: .8rem;
+}
+.pricing-price {
+  display: flex;
+  align-items: baseline;
+  gap: .3rem;
+  margin-bottom: .4rem;
+}
+.pricing-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+.pricing-currency {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--muted);
+  align-self: flex-start;
+  padding-top: .4rem;
+}
+.pricing-period {
+  font-size: .78rem;
+  color: var(--muted);
+}
+.pricing-desc {
+  font-size: .78rem;
+  color: var(--dim);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+.pricing-divider {
+  height: 1px;
+  background: var(--border);
+  margin-bottom: 1.5rem;
+}
+.pricing-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  margin-bottom: 2rem;
+}
+.pricing-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  font-size: .8rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.pricing-feature-icon {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: .15rem;
+  font-size: .75rem;
+}
+.pricing-btn {
+  width: 100%;
+  padding: .8rem;
+  border-radius: 8px;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  border: none;
+  transition: all .2s;
+}
+.pricing-btn.outline {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text);
+}
+.pricing-btn.outline:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: var(--border3);
+}
+.pricing-btn.solid {
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  color: #050e09;
+  box-shadow: 0 0 20px rgba(0,212,160,0.2);
+}
+.pricing-btn.solid:hover {
+  box-shadow: 0 4px 30px rgba(0,212,160,0.35);
+  transform: translateY(-1px);
+}
+
+/* ── SECURITY SHOWCASE ────────────────────────────────────── */
+.security {
+  padding: var(--pad) 0;
+  position: relative;
+  overflow: hidden;
+}
+.security-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  margin-top: 4rem;
+}
+.security-checks {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.security-check {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .75rem 1rem;
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: all .3s;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.security-check:hover {
+  border-color: var(--border2);
+  background: var(--s2);
+}
+.security-check-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.security-check-icon.pass { background: var(--accent2); color: var(--accent); }
+.security-check-icon.warn { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.security-check-icon.fail { background: rgba(239,68,68,0.12); color: #ef4444; }
+.security-check-text { font-size: .8rem; font-weight: 500; }
+.security-check-sub { font-size: .68rem; color: var(--muted); margin-top: .1rem; }
+
+.score-showcase {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+.score-ring-big {
+  position: relative;
+  width: 160px; height: 160px;
+}
+.score-ring-big svg { transform: rotate(-90deg); }
+.score-ring-val {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.score-num-big {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  color: var(--accent);
+  line-height: 1;
+}
+.score-label-big {
+  font-size: .65rem;
+  color: var(--muted);
+  margin-top: .2rem;
+}
+.score-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .6rem;
+  width: 100%;
+}
+.score-detail {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .8rem;
+  text-align: center;
+}
+.score-detail-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+.score-detail-label {
+  font-size: .62rem;
+  color: var(--muted);
+  margin-top: .2rem;
+}
+
+/* ── CTA ─────────────────────────────────────────────────── */
+.cta-section {
+  padding: var(--pad) 0;
+  position: relative;
+  overflow: hidden;
+}
+.cta-card {
+  background: linear-gradient(135deg, var(--s1) 0%, var(--s2) 100%);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 5vw, 4rem);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cta-card::before {
+  content: '';
+  position: absolute;
+  top: -100px; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse, rgba(0,212,160,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.cta-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-h2);
+  font-weight: 800;
+  letter-spacing: -.03em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+}
+.cta-sub {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.8;
+}
+.cta-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.cta-note {
+  font-size: .72rem;
+  color: var(--dim);
+  margin-top: 1.2rem;
+}
+
+/* ── FOOTER ──────────────────────────────────────────────── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2.5rem 0;
+}
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: .95rem;
+}
+.footer-logo span { color: var(--accent); }
+.footer-copy {
+  font-size: .72rem;
+  color: var(--dim);
+}
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+.footer-links a {
+  font-size: .72rem;
+  color: var(--dim);
+  transition: color .2s;
+}
+.footer-links a:hover { color: var(--muted); }
+
+/* ── CONTACT FORM ─────────────────────────────────────────── */
+.contact {
+  padding: var(--pad) 0;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.contact-form {
+  background: var(--s1);
+  border: 1px solid var(--border2);
+  border-radius: 16px;
+  padding: 2.5rem;
+}
+.form-group {
+  margin-bottom: 1.2rem;
+}
+.form-label {
+  display: block;
+  font-size: .72rem;
+  font-weight: 600;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: .4rem;
+}
+.form-input {
+  width: 100%;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  color: var(--text);
+  font-size: .88rem;
+  outline: none;
+  font-family: 'Figtree', sans-serif;
+  transition: border-color .2s;
+}
+.form-input:focus { border-color: var(--accent); }
+.form-input::placeholder { color: var(--dim); }
+.form-textarea { min-height: 100px; resize: vertical; }
+.form-submit {
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  color: #050e09;
+  font-weight: 700;
+  font-size: .9rem;
+  padding: .9rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  transition: all .2s;
+  margin-top: .5rem;
+}
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,212,160,0.3);
+}
+.form-submit:disabled { opacity: .5; cursor: not-allowed; }
+.form-ok { font-size: .82rem; color: var(--accent); text-align: center; margin-top: .8rem; display: none; }
+.form-err { font-size: .82rem; color: #f87171; text-align: center; margin-top: .8rem; }
+
+/* ── UTILITIES ───────────────────────────────────────────── */
+.text-accent { color: var(--accent); }
+.mb-header { margin-bottom: clamp(3rem, 6vw, 5rem); text-align: center; }
+.reveal { opacity: 0; transform: translateY(30px); }
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+/* ── RESPONSIVE — TABLET (≤1024px) ──────────────────────── */
+@media (max-width: 1024px) {
+  .preview-float { display: none; }
+  .preview-float-2 { display: none; }
+}
+
+/* ── RESPONSIVE — TABLET/MOBILE (≤900px) ────────────────── */
+@media (max-width: 900px) {
+  /* Nav */
+  .nav-links { display: none; }
+  .nav-hamburger { display: flex; }
+
+  /* Hero */
+  .hero { min-height: auto; padding: 7rem 0 5rem; }
+  .hero-content { max-width: 100%; text-align: center; }
+  .hero-sub { margin: 0 auto 2rem; }
+  .hero-actions { justify-content: center; }
+  .hero-stats { justify-content: center; gap: 1.5rem; }
+  .hero-stat-divider { display: none; }
+
+  /* Features */
+  .features-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Pricing */
+  .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
+
+  /* Sections */
+  .how-grid, .security-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+  /* Dashboard preview */
+  .preview-body { grid-template-columns: 1fr; }
+  .preview-sidebar { display: none; }
+}
+
+/* ── RESPONSIVE — MOBILE (≤640px) ───────────────────────── */
+@media (max-width: 640px) {
+  :root {
+    --pad: 3.5rem;
+    --fs-hero: clamp(2.2rem, 8vw, 3rem);
+    --fs-h2: clamp(1.6rem, 5vw, 2.2rem);
+  }
+
+  /* Nav — banner fica 2 linhas em mobile (~52px) */
+  .validation-banner { font-size: .7rem; padding: .5rem 1rem; }
+  nav { top: 52px; padding: 1rem 0; }
+  #nav-mobile { top: 117px; }
+
+  /* Hero */
+  .hero { padding: 6rem 0 4rem; }
+  .hero-badge { font-size: .65rem; }
+  .hero-title { letter-spacing: -.02em; margin-bottom: 1rem; }
+  .hero-sub { font-size: .95rem; }
+  .hero-actions { gap: .7rem; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: .9rem 1.2rem; }
+  .hero-stats { flex-direction: column; align-items: center; gap: 1rem; padding-top: 1.5rem; margin-top: 2rem; }
+  .hero-stat-divider { display: none; }
+
+  /* Features */
+  .features-grid { grid-template-columns: 1fr; gap: 1rem; }
+
+  /* How-to steps */
+  .how-step { gap: 1rem; }
+  .how-step-num { font-size: 1.5rem; min-width: 36px; }
+
+  /* Security */
+  .score-details-grid { grid-template-columns: repeat(2, 1fr); gap: .8rem; }
+  .score-ring-big svg { width: 130px; height: 130px; }
+  .score-ring-val { position: absolute; inset: 0; }
+
+  /* Pricing */
+  .pricing-grid { max-width: 100%; }
+  .pricing-card { padding: 1.5rem; }
+
+  /* Contact */
+  .contact-form { padding: 1.5rem; }
+  .form-input { font-size: .9rem; padding: .75rem 1rem; }
+  .form-submit { padding: 1rem; font-size: .9rem; }
+
+  /* Terminal */
+  .terminal { font-size: .7rem; }
+  .terminal-body { padding: 1rem; }
+
+  /* Section headers */
+  .section-sub { font-size: .9rem; }
+
+  /* Footer */
+  .footer-inner { flex-direction: column; align-items: center; gap: 1.5rem; text-align: center; }
+  .footer-links { flex-wrap: wrap; justify-content: center; gap: .8rem; }
+
+  /* Preview */
+  .preview-wrap { border-radius: 10px; }
+  .preview-url { display: none; }
+}
+
+/* ── RESPONSIVE — SMALL MOBILE (≤400px) ─────────────────── */
+@media (max-width: 400px) {
+  .wrap { padding: 0 1rem; }
+  .hero-title { font-size: clamp(1.9rem, 7vw, 2.5rem); }
+  .feature-card { padding: 1.2rem; }
+  .hero-badge { font-size: .6rem; padding: .3rem .7rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── VALIDATION BANNER ────────────────────────────────── -->
+<div class="validation-banner">
+  🚀 <strong>WPVelo está em validação de mercado.</strong> Se o produto resolve um problema real para ti, podes começar hoje ao preço de early adopter — garantido por escrito.
+  <span class="val-spots"><span class="val-dot"></span> 8 vagas restantes</span>
+</div>
+
+<!-- ── NAV ─────────────────────────────────────────────────── -->
+<nav id="nav">
+  <div class="wrap">
+    <div class="nav-inner">
+      <div class="nav-logo">
+        <svg width="32" height="32" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="120" height="120" rx="28" fill="url(#nll)"/>
+          <path d="M32 34 L60 82 L88 34" stroke="#07090d" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="60" cy="82" r="6" fill="#07090d"/>
+          <defs><linearGradient id="nll" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00e8b0"/><stop offset="100%" stop-color="#009970"/></linearGradient></defs>
+        </svg>
+        WP<span>Velo</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#features">Funcionalidades</a></li>
+        <li><a href="#commands">Comandos</a></li>
+        <li><a href="#how">Como funciona</a></li>
+        <li><a href="#pricing">Preços</a></li>
+        <li><a href="#contact">Contacto</a></li>
+        <li><a href="wpvelo-dashboard.html" style="font-size:.82rem;font-weight:500;color:var(--muted);transition:color .2s;letter-spacing:.02em;" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Entrar</a></li>
+        <li><a href="#contact" class="nav-cta">Pedir Acesso</a></li>
+      </ul>
+      <!-- Hamburger mobile -->
+      <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="nav-mobile" id="nav-mobile">
+  <a href="#features" onclick="closeMobileMenu()">Funcionalidades</a>
+  <a href="#commands" onclick="closeMobileMenu()">Comandos Remotos</a>
+  <a href="#how" onclick="closeMobileMenu()">Como funciona</a>
+  <a href="#pricing" onclick="closeMobileMenu()">Preços</a>
+  <a href="wpvelo-dashboard.html">Entrar na conta</a>
+  <a href="#contact" onclick="closeMobileMenu()" class="nav-cta-mobile">Pedir Acesso →</a>
+</div>
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="wrap">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        WPVelo · Monitorização em tempo real
+      </div>
+      <h1 class="hero-title">
+        Os teus sites<br>
+        WordPress sob<br>
+        <em>controlo total</em>
+      </h1>
+      <p class="hero-sub">
+        Dashboard profissional para freelancers e agências. Segurança, performance e actualizações de todos os teus sites WordPress — num único lugar.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">
+          Pedir acesso gratuito →
+        </a>
+        <a href="wpvelo-dashboard.html" class="btn-secondary">
+          Ver como funciona
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div>
+          <div class="hero-stat-val">14<span>+</span></div>
+          <div class="hero-stat-label">Verificações de segurança</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div>
+          <div class="hero-stat-val">5<span>min</span></div>
+          <div class="hero-stat-label">Intervalo de monitorização</div>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div>
+          <div class="hero-stat-val">100<span>%</span></div>
+          <div class="hero-stat-label">Automático</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PREVIEW ─────────────────────────────────────────────── -->
+<section class="preview-section">
+  <div class="wrap">
+    <div style="position:relative;max-width:900px;margin:0 auto">
+      <div class="preview-wrap reveal">
+        <div class="preview-bar">
+          <div class="preview-dot"></div>
+          <div class="preview-dot"></div>
+          <div class="preview-dot"></div>
+          <div class="preview-url">app.wpvelo.pt — Dashboard</div>
+        </div>
+        <div class="preview-body">
+          <div class="preview-sidebar">
+            <div class="preview-sb-logo">
+              <svg width="22" height="22" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="120" height="120" rx="22" fill="url(#psi)"/>
+              <path d="M32 34 L60 82 L88 34" stroke="#07090d" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <circle cx="60" cy="82" r="8" fill="#07090d"/>
+              <defs><linearGradient id="psi" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00e8b0"/><stop offset="100%" stop-color="#009970"/></linearGradient></defs>
+            </svg>
+              <div class="preview-sb-name">WP<span>Velo</span></div>
+            </div>
+            <div class="preview-nav-item active">📊 Dashboard</div>
+            <div class="preview-nav-item">🌐 Sites</div>
+            <div class="preview-nav-item">🔔 Alertas</div>
+            <div class="preview-nav-item">⚙️ Definições</div>
+          </div>
+          <div class="preview-main">
+            <div class="preview-stats">
+              <div class="preview-stat">
+                <div class="preview-stat-val">8</div>
+                <div class="preview-stat-label">Sites Activos</div>
+              </div>
+              <div class="preview-stat b">
+                <div class="preview-stat-val">99.8%</div>
+                <div class="preview-stat-label">Uptime Médio</div>
+              </div>
+              <div class="preview-stat o">
+                <div class="preview-stat-val">3</div>
+                <div class="preview-stat-label">Updates Pendentes</div>
+              </div>
+              <div class="preview-stat p">
+                <div class="preview-stat-val">87</div>
+                <div class="preview-stat-label">Score Segurança</div>
+              </div>
+            </div>
+            <div class="preview-card">
+              <div class="preview-card-head">
+                <span>🌐 Sites Monitorizados</span>
+                <span style="color:var(--accent)">Ver todos →</span>
+              </div>
+              <div class="preview-card-body">
+                <div class="preview-row">
+                  <div class="preview-row-site"><div class="preview-site-dot"></div>loja-exemplo.pt</div>
+                  <div class="preview-score"><div class="preview-score-bar"><div class="preview-score-fill" style="width:92%"></div></div><span style="font-size:.6rem;color:var(--accent)">92</span></div>
+                  <div class="preview-badge ok">✓ OK</div>
+                </div>
+                <div class="preview-row">
+                  <div class="preview-row-site"><div class="preview-site-dot"></div>portfolio-joao.com</div>
+                  <div class="preview-score"><div class="preview-score-bar"><div class="preview-score-fill" style="width:78%"></div></div><span style="font-size:.6rem;color:var(--accent)">78</span></div>
+                  <div class="preview-badge warn">⚠ 2 updates</div>
+                </div>
+                <div class="preview-row">
+                  <div class="preview-row-site"><div class="preview-site-dot"></div>clinica-saude.pt</div>
+                  <div class="preview-score"><div class="preview-score-bar"><div class="preview-score-fill" style="width:95%"></div></div><span style="font-size:.6rem;color:var(--accent)">95</span></div>
+                  <div class="preview-badge ok">✓ OK</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating cards -->
+      <div class="preview-float preview-float-2 reveal">
+        <div class="preview-float-label">Verificações</div>
+        <div class="preview-float-check"><div class="preview-float-icon ok">✓</div><span>SSL Activo</span></div>
+        <div class="preview-float-check"><div class="preview-float-icon ok">✓</div><span>WordPress actualizado</span></div>
+        <div class="preview-float-check"><div class="preview-float-icon warn">⚠</div><span>XML-RPC exposto</span></div>
+        <div class="preview-float-check"><div class="preview-float-icon ok">✓</div><span>Debug desactivado</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FEATURES ─────────────────────────────────────────────── -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="mb-header">
+      <div class="section-label">Funcionalidades</div>
+      <h2 class="section-title reveal">Tudo o que precisas.<br><span class="text-accent">Nada do que não precisas.</span></h2>
+      <p class="section-sub reveal" style="margin:1rem auto 0">Construído especificamente para quem gere sites WordPress de forma profissional.</p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card reveal">
+        <div class="feature-num">01</div>
+        <div class="feature-icon green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="feature-title">Segurança Activa</div>
+        <div class="feature-desc">14 verificações automáticas: SSL, debug mode, XML-RPC, enumeração de utilizadores, prefixo da BD, edição de ficheiros e muito mais.</div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">02</div>
+        <div class="feature-icon blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg>
+        </div>
+        <div class="feature-title">Uptime em Tempo Real</div>
+        <div class="feature-desc">Monitorização contínua do estado dos teus sites. Alertas imediatos quando algo não está bem.</div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">03</div>
+        <div class="feature-icon orange">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 6h6M9 10h6M9 14h4"/></svg>
+        </div>
+        <div class="feature-title">Gestão de Plugins</div>
+        <div class="feature-desc">Lista completa de plugins, versões instaladas, actualizações disponíveis e plugins com vulnerabilidades conhecidas.</div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">04</div>
+        <div class="feature-icon purple">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <div class="feature-title">Performance do Servidor</div>
+        <div class="feature-desc">Tempo de resposta, memória PHP, limite de memória, plugin de cache activo e métricas do servidor em tempo real.</div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">05</div>
+        <div class="feature-icon yellow">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="feature-title">Score de Segurança</div>
+        <div class="feature-desc">Pontuação de 0 a 100 calculada automaticamente com recomendações claras e accionáveis para cada problema detectado.</div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">06</div>
+        <div class="feature-icon red">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        </div>
+        <div class="feature-title">Alertas Inteligentes</div>
+        <div class="feature-desc">Notificações automáticas quando há actualizações críticas, problemas de segurança ou alterações no site.</div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">07</div>
+        <div class="feature-icon blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <div class="feature-title">Comandos Remotos</div>
+        <div class="feature-desc">Actualiza, activa/desactiva plugins, limpa cache directamente do dashboard — sem SSH ou FTP.</div>
+      </div>
+
+      <div class="feature-card reveal">
+        <div class="feature-num">08</div>
+        <div class="feature-icon green">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <div class="feature-title">Relatórios Automáticos</div>
+        <div class="feature-desc">Gera relatórios profissionais de saúde do site para os teus clientes. Mostra o teu valor de forma automatizada.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── REMOTE COMMANDS ──────────────────────────────────────── -->
+<section style="padding: var(--pad) 0; position:relative; overflow:hidden;" id="commands">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 100%, rgba(0,212,160,0.04) 0%, transparent 70%);pointer-events:none;"></div>
+  <div class="wrap">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;" class="how-grid">
+      <div>
+        <div class="section-label">Controlo Total</div>
+        <h2 class="section-title reveal">Gere todos os sites<br><span class="text-accent">a partir de um só lugar.</span></h2>
+        <p class="section-sub reveal" style="margin-top:1rem">Sem acesso SSH. Sem FTP. Sem entrar em cada painel WP-Admin individualmente. Executa acções em qualquer site WordPress directamente do teu dashboard.</p>
+        <div style="display:flex;flex-direction:column;gap:.9rem;margin-top:2rem;">
+          <div class="reveal" style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;background:var(--s1);border:1px solid var(--border);border-radius:10px;">
+            <span style="font-size:1.3rem;margin-top:.1rem">🔄</span>
+            <div><div style="font-weight:600;font-size:.9rem;margin-bottom:.3rem">Actualizar plugins e temas</div><div style="font-size:.82rem;color:var(--muted)">Um clique para actualizar qualquer plugin ou tema. Em todos os sites. Sem entrar em cada um.</div></div>
+          </div>
+          <div class="reveal" style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;background:var(--s1);border:1px solid var(--border);border-radius:10px;">
+            <span style="font-size:1.3rem;margin-top:.1rem">⚡</span>
+            <div><div style="font-weight:600;font-size:.9rem;margin-bottom:.3rem">Limpar cache</div><div style="font-size:.82rem;color:var(--muted)">Limpa cache de WP Rocket, W3TC, LiteSpeed e outros directamente do dashboard.</div></div>
+          </div>
+          <div class="reveal" style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;background:var(--s1);border:1px solid var(--border);border-radius:10px;">
+            <span style="font-size:1.3rem;margin-top:.1rem">🔌</span>
+            <div><div style="font-weight:600;font-size:.9rem;margin-bottom:.3rem">Activar / desactivar plugins</div><div style="font-size:.82rem;color:var(--muted)">Responde a incidentes em segundos. Desactiva um plugin problemático sem precisar de aceder ao WP-Admin.</div></div>
+          </div>
+          <div class="reveal" style="display:flex;align-items:flex-start;gap:1rem;padding:1rem 1.2rem;background:var(--s1);border:1px solid var(--border);border-radius:10px;">
+            <span style="font-size:1.3rem;margin-top:.1rem">🛡️</span>
+            <div><div style="font-weight:600;font-size:.9rem;margin-bottom:.3rem">Actualizar WordPress Core</div><div style="font-size:.82rem;color:var(--muted)">Mantém todos os sites na versão mais recente e segura do WordPress sem esforço adicional.</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div style="background:var(--s1);border:1px solid var(--border2);border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5),0 0 40px rgba(0,212,160,0.05);">
+          <div style="background:var(--s2);border-bottom:1px solid var(--border);padding:.75rem 1.2rem;display:flex;align-items:center;gap:.5rem;">
+            <div style="width:10px;height:10px;border-radius:50%;background:#ef4444;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#fbbf24;"></div>
+            <div style="width:10px;height:10px;border-radius:50%;background:#00d4a0;"></div>
+            <span style="margin-left:.5rem;font-family:'DM Mono',monospace;font-size:.7rem;color:var(--dim);">WPVelo — Comandos Remotos</span>
+          </div>
+          <div style="padding:1.2rem;display:flex;flex-direction:column;gap:.6rem;">
+            <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.2rem;">Selecciona site</div>
+            <div style="background:var(--s2);border:1px solid var(--border2);border-radius:8px;padding:.6rem .9rem;font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;align-items:center;">loja-exemplo.pt <span style="color:var(--accent);font-size:.7rem">● Online</span></div>
+            <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:.5rem 0 .2rem;">Acção</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;">
+              <div style="background:var(--s3);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;font-size:.78rem;color:var(--muted);text-align:center;">🔄 Update Plugins</div>
+              <div style="background:rgba(0,212,160,0.08);border:1px solid rgba(0,212,160,0.2);border-radius:8px;padding:.6rem .8rem;font-size:.78rem;color:var(--accent);text-align:center;">⚡ Limpar Cache</div>
+              <div style="background:var(--s3);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;font-size:.78rem;color:var(--muted);text-align:center;">🔌 Gerir Plugins</div>
+              <div style="background:var(--s3);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;font-size:.78rem;color:var(--muted);text-align:center;">🛡️ Update Core</div>
+            </div>
+            <div style="margin-top:.5rem;padding:.8rem 1rem;background:var(--s2);border:1px solid var(--border);border-radius:8px;font-family:'DM Mono',monospace;font-size:.72rem;">
+              <div style="color:var(--dim);margin-bottom:.3rem">// Resultado</div>
+              <div style="color:var(--accent)">✓ Cache limpa com sucesso</div>
+              <div style="color:var(--muted)">WP Rocket · 2.3MB libertados</div>
+              <div style="color:var(--dim)">há 12 segundos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ─────────────────────────────────────────── -->
+  <div class="wrap">
+    <div class="how-grid">
+      <div>
+        <div class="section-label">Como funciona</div>
+        <h2 class="section-title reveal">Configurado em<br><span class="text-accent">menos de 5 minutos</span></h2>
+        <div class="how-steps" style="margin-top:2.5rem">
+          <div class="how-step reveal">
+            <div class="how-step-num">01</div>
+            <div>
+              <div class="how-step-title">Recebes acesso ao dashboard</div>
+              <div class="how-step-desc">Enviamos-te as credenciais de acesso após a tua subscrição. Login imediato, sem configurações técnicas.</div>
+            </div>
+          </div>
+          <div class="how-step reveal">
+            <div class="how-step-num">02</div>
+            <div>
+              <div class="how-step-title">Adicionas os teus sites</div>
+              <div class="how-step-desc">No dashboard clicas "Adicionar Site". O sistema gera uma API Key única para cada site.</div>
+            </div>
+          </div>
+          <div class="how-step reveal">
+            <div class="how-step-num">03</div>
+            <div>
+              <div class="how-step-title">Instalas o plugin WordPress</div>
+              <div class="how-step-desc">Instalas o WPVelo Connector em cada site WordPress e colas a API Key nas definições do plugin.</div>
+            </div>
+          </div>
+          <div class="how-step reveal">
+            <div class="how-step-num">04</div>
+            <div>
+              <div class="how-step-title">Monitorização automática</div>
+              <div class="how-step-desc">O plugin envia dados automaticamente de 15 em 15 minutos (ou 30 min — configurável). O dashboard actualiza sem precisares de fazer nada.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="terminal">
+          <div class="terminal-bar">
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+            <div class="terminal-dot"></div>
+            <div class="terminal-title">wpvelo — logs em tempo real</div>
+          </div>
+          <div class="terminal-body">
+            <div><span class="t-dim">2026-03-04 16:05:01</span> <span class="t-green">✓ INGEST</span></div>
+            <div><span class="t-muted">  site:</span> <span class="t-white">loja-exemplo.pt</span></div>
+            <div><span class="t-muted">  wp:</span> <span class="t-green">6.9.1 ✓ actualizado</span></div>
+            <div><span class="t-muted">  plugins:</span> <span class="t-white">24 total</span><span class="t-orange"> · 2 updates</span></div>
+            <div><span class="t-muted">  security:</span> <span class="t-green">score 92/100</span></div>
+            <div><span class="t-muted">  php:</span> <span class="t-blue">8.2.15 · 128MB</span></div>
+            <div><span class="t-muted">  response:</span> <span class="t-green">187ms</span></div>
+            <div>&nbsp;</div>
+            <div><span class="t-dim">2026-03-04 16:10:01</span> <span class="t-green">✓ INGEST</span></div>
+            <div><span class="t-muted">  site:</span> <span class="t-white">clinica-saude.pt</span></div>
+            <div><span class="t-muted">  security:</span> <span class="t-green">score 95/100</span></div>
+            <div><span class="t-muted">  uptime:</span> <span class="t-green">99.9% (30d)</span></div>
+            <div><span class="t-comment">  # sem alertas activos</span></div>
+            <div>&nbsp;</div>
+            <div><span class="t-dim">2026-03-04 16:10:02</span> <span class="t-orange">⚠ ALERTA</span></div>
+            <div><span class="t-muted">  site:</span> <span class="t-white">portfolio-joao.com</span></div>
+            <div><span class="t-orange">  XML-RPC exposto</span></div>
+            <div><span class="t-comment">  # notificação enviada</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECURITY ─────────────────────────────────────────────── -->
+<section class="security" id="security">
+  <div class="wrap">
+    <div class="security-grid">
+      <div>
+        <div class="section-label">Segurança</div>
+        <h2 class="section-title reveal">14 verificações.<br><span class="text-accent">Zero surpresas.</span></h2>
+        <p class="section-sub reveal" style="margin-top:1rem">Cada site é analisado em profundidade. Sabes exactamente o que está bem e o que precisa de atenção — com recomendações claras.</p>
+        <div class="security-checks" style="margin-top:2rem">
+          <div class="security-check">
+            <div class="security-check-icon pass">✓</div>
+            <div><div class="security-check-text">SSL/HTTPS Activo</div><div class="security-check-sub">Certificado válido detectado</div></div>
+          </div>
+          <div class="security-check">
+            <div class="security-check-icon pass">✓</div>
+            <div><div class="security-check-text">WordPress Actualizado</div><div class="security-check-sub">Versão mais recente instalada</div></div>
+          </div>
+          <div class="security-check">
+            <div class="security-check-icon pass">✓</div>
+            <div><div class="security-check-text">Debug Mode Desactivado</div><div class="security-check-sub">WP_DEBUG = false em produção</div></div>
+          </div>
+          <div class="security-check">
+            <div class="security-check-icon warn">⚠</div>
+            <div><div class="security-check-text">XML-RPC Exposto</div><div class="security-check-sub">Desactiva para prevenir ataques</div></div>
+          </div>
+          <div class="security-check">
+            <div class="security-check-icon pass">✓</div>
+            <div><div class="security-check-text">Prefixo BD Personalizado</div><div class="security-check-sub">Protegido contra SQL injection</div></div>
+          </div>
+          <div class="security-check">
+            <div class="security-check-icon pass">✓</div>
+            <div><div class="security-check-text">Sem Username "admin"</div><div class="security-check-sub">Boa prática de segurança</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="score-showcase reveal">
+        <div class="score-ring-big">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="68" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
+            <circle cx="80" cy="80" r="68" fill="none" stroke="var(--accent)" stroke-width="10"
+              stroke-dasharray="427" stroke-dashoffset="64"
+              stroke-linecap="round"
+              style="filter:drop-shadow(0 0 12px rgba(0,212,160,0.5))"/>
+          </svg>
+          <div class="score-ring-val">
+            <div class="score-num-big">87</div>
+            <div class="score-label-big">/ 100</div>
+          </div>
+        </div>
+        <div class="score-details-grid" style="max-width:280px">
+          <div class="score-detail">
+            <div class="score-detail-num" style="color:var(--accent)">10</div>
+            <div class="score-detail-label">✅ Passou</div>
+          </div>
+          <div class="score-detail">
+            <div class="score-detail-num" style="color:#fbbf24">3</div>
+            <div class="score-detail-label">⚠️ Avisos</div>
+          </div>
+          <div class="score-detail">
+            <div class="score-detail-num" style="color:#ef4444">1</div>
+            <div class="score-detail-label">❌ Crítico</div>
+          </div>
+          <div class="score-detail">
+            <div class="score-detail-num" style="color:var(--blue)">99.8%</div>
+            <div class="score-detail-label">Uptime 30d</div>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:var(--dim);text-align:center;max-width:240px;line-height:1.6">Score calculado automaticamente. Intervalo configurável: 15 ou 30 minutos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRICING ─────────────────────────────────────────────── -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="mb-header">
+      <div class="section-label">Preços</div>
+      <h2 class="section-title reveal">Simples e transparente.</h2>
+      <p class="section-sub reveal" style="margin:1rem auto 0">Preço de <strong style="color:var(--accent)">early adopter</strong> — garantido por escrito para sempre. Sem surpresas. Cancelas quando quiseres.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="pricing-card reveal">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.3rem;">
+          <div class="pricing-name">Starter</div>
+          <span style="background:rgba(0,212,160,0.1);border:1px solid rgba(0,212,160,0.2);border-radius:12px;padding:.2rem .6rem;font-size:.65rem;font-weight:700;color:var(--accent);letter-spacing:.04em;">EARLY ADOPTER</span>
+        </div>
+        <div class="pricing-price">
+          <span class="pricing-currency">€</span>
+          <span class="pricing-amount">9</span>
+          <span class="pricing-period">/mês</span>
+        </div>
+        <div class="pricing-desc">Para freelancers a começar. Até 5 sites WordPress.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Até 5 sites</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>14 verificações de segurança</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Monitorização a cada 15 ou 30 min</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Alertas automáticos</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Dashboard completo</li>
+        </ul>
+        <button class="pricing-btn outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Pedir acesso</button>
+      </div>
+      <div class="pricing-card featured reveal">
+        <div class="pricing-name">Professional</div>
+        <div class="pricing-price">
+          <span class="pricing-currency">€</span>
+          <span class="pricing-amount">19</span>
+          <span class="pricing-period">/mês</span>
+        </div>
+        <div class="pricing-desc">Para freelancers estabelecidos. Até 15 sites WordPress.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Até 15 sites</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Tudo do Starter</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Score de segurança detalhado</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Métricas de performance</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Histórico de 30 dias</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Suporte prioritário</li>
+        </ul>
+        <button class="pricing-btn solid" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Pedir acesso</button>
+      </div>
+      <div class="pricing-card reveal">
+        <div class="pricing-name">Agency</div>
+        <div class="pricing-price">
+          <span class="pricing-currency">€</span>
+          <span class="pricing-amount">35</span>
+          <span class="pricing-period">/mês</span>
+        </div>
+        <div class="pricing-desc">Para agências. Até 30 sites WordPress.</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Até 30 sites</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Tudo do Professional</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Relatórios exportáveis</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Multi-utilizador</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>SLA garantido</li>
+          <li class="pricing-feature"><span class="pricing-feature-icon">✓</span>Onboarding dedicado</li>
+        </ul>
+        <button class="pricing-btn outline" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Pedir acesso</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ─────────────────────────────────────────────── -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <div class="section-label">Contacto</div>
+        <h2 class="section-title reveal">Pronto para<br><span class="text-accent">começar?</span></h2>
+        <p class="section-sub reveal" style="margin-top:1rem;margin-bottom:2rem">Pede acesso e entraremos em contacto em menos de 24 horas para te dar acesso ao dashboard e instalar tudo contigo.</p>
+        <div class="reveal" style="display:flex;flex-direction:column;gap:.8rem">
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.85rem;color:var(--muted)">
+            <span style="color:var(--accent)">✓</span> Configuração em menos de 5 minutos
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.85rem;color:var(--muted)">
+            <span style="color:var(--accent)">✓</span> Sem compromisso — cancelas quando quiseres
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.85rem;color:var(--muted)">
+            <span style="color:var(--accent)">✓</span> Suporte em português
+          </div>
+          <div style="display:flex;align-items:center;gap:.8rem;font-size:.85rem;color:var(--muted)">
+            <span style="color:var(--accent)">✓</span> 14 dias de experimentação gratuita
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal">
+        <div class="form-group">
+          <label class="form-label">O teu nome</label>
+          <input id="cf-name" class="form-input" type="text" placeholder="João Silva">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email profissional</label>
+          <input id="cf-email" class="form-input" type="email" placeholder="joao@exemplo.pt">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Quantos sites WordPress geres?</label>
+          <input id="cf-sites" class="form-input" type="text" placeholder="ex: 8 sites">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Mensagem <span style="color:var(--dim);text-transform:none;font-weight:300">(opcional)</span></label>
+          <textarea id="cf-msg" class="form-input form-textarea" placeholder="Conta-nos um pouco sobre o teu trabalho..."></textarea>
+        </div>
+        <!-- Cloudflare Turnstile — anti-bot invisível -->
+        <div class="cf-turnstile"
+          data-sitekey="0x4AAAAAACmuhp9HwfCR3vQi"
+          data-theme="dark"
+          data-size="normal"
+          style="margin-bottom:.8rem"
+          id="cf-turnstile">
+        </div>
+        <button class="form-submit" id="cf-btn" onclick="submitContact()">Quero experimentar gratuitamente →</button>
+        <div class="form-ok" id="cf-ok">✓ Mensagem enviada! Entramos em contacto em breve.</div>
+        <div class="form-err" id="cf-err"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <svg width="24" height="24" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="120" height="120" rx="28" fill="url(#nfl)"/>
+        <path d="M32 34 L60 82 L88 34" stroke="#07090d" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <circle cx="60" cy="82" r="7" fill="#07090d"/>
+        <defs><linearGradient id="nfl" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#00e8b0"/><stop offset="100%" stop-color="#009970"/></linearGradient></defs>
+      </svg>
+        WP<span>Velo</span>
+      </div>
+      <ul class="footer-links">
+        <li><a href="#terms" onclick="document.getElementById('modalTerms').style.display='flex'">Termos de Serviço</a></li>
+        <li><a href="#privacy" onclick="document.getElementById('modalPrivacy').style.display='flex'">Política de Privacidade</a></li>
+        <li><a href="#contact">Contacto</a></li>
+      </ul>
+      <div class="footer-copy">© 2026 WPVelo. Todos os direitos reservados.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── FEATURE CARD MOUSE TRACKING ─────────────────────────
+document.querySelectorAll('.feature-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+    const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+    card.style.setProperty('--mx', x + '%');
+    card.style.setProperty('--my', y + '%');
+  });
+});
+
+// ── HAMBURGER MENU ────────────────────────────────────────
+function toggleMobileMenu() {
+  const menu = document.getElementById('nav-mobile');
+  const burger = document.getElementById('nav-hamburger');
+  const isOpen = menu.classList.toggle('visible');
+  burger.classList.toggle('open', isOpen);
+}
+function closeMobileMenu() {
+  document.getElementById('nav-mobile').classList.remove('visible');
+  document.getElementById('nav-hamburger').classList.remove('open');
+}
+// Fechar ao clicar fora
+document.addEventListener('click', e => {
+  const menu = document.getElementById('nav-mobile');
+  const burger = document.getElementById('nav-hamburger');
+  if (!menu.contains(e.target) && !burger.contains(e.target)) {
+    menu.classList.remove('visible');
+    burger.classList.remove('open');
+  }
+});
+
+// ── NAV SCROLL ────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// ── HERO ANIMATIONS ───────────────────────────────────────
+const heroTl = gsap.timeline({ delay: 0.1 });
+heroTl
+  .to('.hero-badge',   { opacity: 1, y: 0, duration: .6, ease: 'power2.out' })
+  .to('.hero-title',   { opacity: 1, y: 0, duration: .7, ease: 'power2.out' }, '-=.3')
+  .to('.hero-sub',     { opacity: 1, y: 0, duration: .6, ease: 'power2.out' }, '-=.4')
+  .to('.hero-actions', { opacity: 1, y: 0, duration: .6, ease: 'power2.out' }, '-=.3')
+  .to('.hero-stats',   { opacity: 1, y: 0, duration: .6, ease: 'power2.out' }, '-=.3');
+
+// ── SCROLL REVEALS ────────────────────────────────────────
+gsap.utils.toArray('.reveal').forEach((el, i) => {
+  gsap.fromTo(el,
+    { opacity: 0, y: 35 },
+    {
+      opacity: 1, y: 0,
+      duration: .7,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: el,
+        start: 'top 88%',
+        once: true,
+      },
+      delay: (i % 3) * 0.08
+    }
+  );
+});
+
+// ── SECURITY CHECKS STAGGER ───────────────────────────────
+gsap.utils.toArray('.security-check').forEach((el, i) => {
+  gsap.to(el, {
+    opacity: 1,
+    x: 0,
+    duration: .5,
+    ease: 'power2.out',
+    scrollTrigger: {
+      trigger: el,
+      start: 'top 90%',
+      once: true,
+    },
+    delay: i * 0.08
+  });
+});
+
+// ── FLOATING CARDS PARALLAX ───────────────────────────────
+window.addEventListener('mousemove', e => {
+  const x = (e.clientX / window.innerWidth - 0.5) * 20;
+  const y = (e.clientY / window.innerHeight - 0.5) * 20;
+  gsap.to('.preview-float-2', { x: x * .6, y: y * .6, duration: 1, ease: 'power1.out' });
+  gsap.to('.hero-orb-1',      { x: x * .3, y: y * .3, duration: 2, ease: 'power1.out' });
+  gsap.to('.hero-orb-2',      { x: x * -.2, y: y * -.2, duration: 2, ease: 'power1.out' });
+});
+
+// ── SCORE RING ANIMATION ──────────────────────────────────
+ScrollTrigger.create({
+  trigger: '.score-ring-big',
+  start: 'top 80%',
+  once: true,
+  onEnter: () => {
+    gsap.from('.score-ring-big circle:nth-child(2)', {
+      strokeDashoffset: 427,
+      duration: 1.4,
+      ease: 'power2.out',
+      delay: 0.2
+    });
+    gsap.from('.score-num-big', {
+      textContent: 0,
+      duration: 1.2,
+      ease: 'power2.out',
+      snap: { textContent: 1 },
+      delay: 0.2,
+      onUpdate: function() {
+        this.targets()[0].textContent = Math.round(this.targets()[0].textContent);
+      }
+    });
+  }
+});
+
+// ── CONTACT FORM ──────────────────────────────────────────
+const API = 'https://sitepulse-backend-duqg.onrender.com';
+
+async function submitContact() {
+  const btn   = document.getElementById('cf-btn');
+  const ok    = document.getElementById('cf-ok');
+  const err   = document.getElementById('cf-err');
+  const name  = document.getElementById('cf-name').value.trim();
+  const email = document.getElementById('cf-email').value.trim();
+  const sites = document.getElementById('cf-sites').value.trim();
+  const msg   = document.getElementById('cf-msg').value.trim();
+
+  err.textContent = ''; ok.style.display = 'none';
+
+  if (!name || !email) { err.textContent = 'Nome e email são obrigatórios.'; return; }
+  if (!email.includes('@')) { err.textContent = 'Email inválido.'; return; }
+
+  btn.disabled = true;
+  btn.textContent = 'A enviar...';
+
+  // Obtém token do Turnstile
+  const turnstileEl = document.querySelector('[name="cf-turnstile-response"]');
+  const turnstile_token = turnstileEl ? turnstileEl.value : null;
+
+  try {
+    const r = await fetch(API + '/public/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, sites, message: msg, turnstile_token })
+    });
+    const d = await r.json();
+
+    if (d.success) {
+      ok.style.display = 'block';
+      btn.style.display = 'none';
+      ['cf-name','cf-email','cf-sites','cf-msg'].forEach(id => {
+        document.getElementById(id).value = '';
+      });
+    } else {
+      err.textContent = d.error || 'Erro ao enviar. Tenta novamente.';
+      btn.disabled = false;
+      btn.textContent = 'Quero experimentar gratuitamente →';
+      if (window.turnstile) window.turnstile.reset();
+    }
+  } catch(e) {
+    err.textContent = 'Erro de ligação. Tenta novamente.';
+    btn.disabled = false;
+    btn.textContent = 'Quero experimentar gratuitamente →';
+    if (window.turnstile) window.turnstile.reset();
+  }
+}
+
+// Enter no form
+document.querySelectorAll('.form-input').forEach(input => {
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) submitContact();
+  });
+});
+</script>
+
+<!-- ── MODAL TERMOS DE SERVIÇO ──────────────────────────── -->
+<div id="modalTerms" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#0c1018;border:1px solid rgba(255,255,255,0.1);border-radius:20px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;padding:2.5rem;position:relative">
+    <button onclick="document.getElementById('modalTerms').style.display='none'" style="position:absolute;top:1.2rem;right:1.2rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#94a3b8;cursor:pointer;padding:.4rem .7rem;font-size:.8rem">✕</button>
+    <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:1.5rem;color:#fff">Termos de Serviço</div>
+    <div style="font-size:.82rem;color:#94a3b8;line-height:1.9;display:flex;flex-direction:column;gap:1rem">
+      <p><strong style="color:#e2e8f0">1. Aceitação dos Termos</strong><br>Ao utilizar o WPVelo, aceitas estes Termos de Serviço na íntegra. Se não concordares com qualquer parte destes termos, não deves utilizar o serviço.</p>
+      <p><strong style="color:#e2e8f0">2. Descrição do Serviço</strong><br>O WPVelo é uma plataforma SaaS de monitorização e gestão de sites WordPress. O serviço permite monitorizar segurança, performance, plugins e executar comandos remotos nos teus sites WordPress.</p>
+      <p><strong style="color:#e2e8f0">3. Conta e Responsabilidade</strong><br>És responsável por manter a confidencialidade das tuas credenciais de acesso. Qualquer actividade realizada através da tua conta é da tua responsabilidade. Deves notificar-nos imediatamente de qualquer acesso não autorizado.</p>
+      <p><strong style="color:#e2e8f0">4. Uso Aceitável</strong><br>Concordas em utilizar o WPVelo apenas para fins legítimos. Não podes utilizar o serviço para aceder a sites WordPress sem autorização do proprietário, para actividades maliciosas ou que violem leis aplicáveis.</p>
+      <p><strong style="color:#e2e8f0">5. Pagamentos e Cancelamento</strong><br>Os planos pagos são cobrados mensalmente. Podes cancelar a qualquer momento. O acesso mantém-se activo até ao final do período pago. Não efectuamos reembolsos de períodos parciais.</p>
+      <p><strong style="color:#e2e8f0">6. Disponibilidade do Serviço</strong><br>Esforçamo-nos para manter o serviço disponível 99,9% do tempo. No entanto, não garantimos disponibilidade ininterrupta e não nos responsabilizamos por perdas resultantes de indisponibilidade.</p>
+      <p><strong style="color:#e2e8f0">7. Limitação de Responsabilidade</strong><br>O WPVelo não se responsabiliza por danos indirectos, incidentais ou consequentes resultantes do uso ou impossibilidade de uso do serviço.</p>
+      <p><strong style="color:#e2e8f0">8. Alterações aos Termos</strong><br>Reservamo-nos o direito de modificar estes termos a qualquer momento. As alterações entram em vigor após publicação. O uso continuado do serviço constitui aceitação dos novos termos.</p>
+      <p style="color:#64748b;font-size:.75rem">Última actualização: Março 2026 · WPVelo · Todos os direitos reservados.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL POLÍTICA DE PRIVACIDADE ────────────────────── -->
+<div id="modalPrivacy" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:9999;align-items:center;justify-content:center;padding:1rem;backdrop-filter:blur(8px)" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#0c1018;border:1px solid rgba(255,255,255,0.1);border-radius:20px;max-width:640px;width:100%;max-height:80vh;overflow-y:auto;padding:2.5rem;position:relative">
+    <button onclick="document.getElementById('modalPrivacy').style.display='none'" style="position:absolute;top:1.2rem;right:1.2rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:8px;color:#94a3b8;cursor:pointer;padding:.4rem .7rem;font-size:.8rem">✕</button>
+    <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:1.5rem;color:#fff">Política de Privacidade</div>
+    <div style="font-size:.82rem;color:#94a3b8;line-height:1.9;display:flex;flex-direction:column;gap:1rem">
+      <p><strong style="color:#e2e8f0">1. Dados que Recolhemos</strong><br>Recolhemos apenas os dados necessários para prestar o serviço: nome, email, e dados técnicos dos sites WordPress que monitorizas (versão WP, plugins, métricas de performance e segurança).</p>
+      <p><strong style="color:#e2e8f0">2. Como Usamos os Dados</strong><br>Os dados são usados exclusivamente para: prestar o serviço de monitorização, enviar alertas e notificações que solicitaste, e melhorar o produto. Nunca vendemos os teus dados a terceiros.</p>
+      <p><strong style="color:#e2e8f0">3. Armazenamento e Segurança</strong><br>Os dados são armazenados em servidores seguros com encriptação em trânsito (HTTPS/TLS) e em repouso. As passwords são encriptadas com bcrypt (factor 12). Nunca armazenamos passwords em texto simples.</p>
+      <p><strong style="color:#e2e8f0">4. Cookies e Sessões</strong><br>Usamos localStorage para guardar o token de autenticação da sessão. Não usamos cookies de rastreamento ou publicidade.</p>
+      <p><strong style="color:#e2e8f0">5. Partilha de Dados</strong><br>Não partilhamos os teus dados com terceiros, excepto quando obrigados por lei. Os dados técnicos dos teus sites são exclusivamente teus.</p>
+      <p><strong style="color:#e2e8f0">6. Os Teus Direitos (RGPD)</strong><br>Tens direito a aceder, rectificar, exportar e eliminar os teus dados a qualquer momento. Para exerceres estes direitos, contacta-nos via formulário de contacto. Respondemos em 30 dias.</p>
+      <p><strong style="color:#e2e8f0">7. Retenção de Dados</strong><br>Os dados são mantidos enquanto a tua conta estiver activa. Após cancelamento, os dados são eliminados em 90 dias, salvo obrigação legal.</p>
+      <p><strong style="color:#e2e8f0">8. Contacto</strong><br>Para questões de privacidade, contacta-nos através do formulário disponível na landing page. Comprometemo-nos a responder em 48 horas úteis.</p>
+      <p style="color:#64748b;font-size:.75rem">Última actualização: Março 2026 · WPVelo · Conformidade com RGPD.</p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
