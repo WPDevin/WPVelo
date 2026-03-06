@@ -21,7 +21,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <style>
@@ -2002,14 +2001,6 @@ footer {
           <label class="form-label">Mensagem <span style="color:var(--dim);text-transform:none;font-weight:300">(opcional)</span></label>
           <textarea id="cf-msg" class="form-input form-textarea" placeholder="Conta-nos um pouco sobre o teu trabalho..."></textarea>
         </div>
-        <!-- Cloudflare Turnstile — anti-bot invisível -->
-        <div class="cf-turnstile"
-          data-sitekey="0x4AAAAAACmuhp9HwfCR3vQi"
-          data-theme="dark"
-          data-size="normal"
-          style="margin-bottom:.8rem"
-          id="cf-turnstile">
-        </div>
         <button class="form-submit" id="cf-btn" onclick="submitContact()">Quero experimentar gratuitamente →</button>
         <div class="form-ok" id="cf-ok">✓ Mensagem enviada! Entramos em contacto em breve.</div>
         <div class="form-err" id="cf-err"></div>
@@ -2178,15 +2169,11 @@ async function submitContact() {
   btn.disabled = true;
   btn.textContent = 'A enviar...';
 
-  // Obtém token do Turnstile
-  const turnstileEl = document.querySelector('[name="cf-turnstile-response"]');
-  const turnstile_token = turnstileEl ? turnstileEl.value : null;
-
   try {
     const r = await fetch(API + '/public/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, email, sites, message: msg, turnstile_token })
+      body: JSON.stringify({ name, email, sites, message: msg })
     });
     const d = await r.json();
 
@@ -2200,14 +2187,11 @@ async function submitContact() {
       err.textContent = d.error || 'Erro ao enviar. Tenta novamente.';
       btn.disabled = false;
       btn.textContent = 'Quero experimentar gratuitamente →';
-      if (window.turnstile) window.turnstile.reset();
     }
   } catch(e) {
     err.textContent = 'Erro de ligação. Tenta novamente.';
     btn.disabled = false;
-    btn.textContent = 'Quero experimentar gratuitamente →';
-    if (window.turnstile) window.turnstile.reset();
-  }
+    btn.textContent = 'Quero experimentar gratuitamente →';  }
 }
 
 // Enter no form
