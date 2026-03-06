@@ -433,24 +433,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15
     <input id="rgPass" class="auth-input" type="password" placeholder="mínimo 8 caracteres" autocomplete="new-password">
     <label class="auth-label" for="rgPass2">Confirmar Password</label>
     <input id="rgPass2" class="auth-input" type="password" placeholder="repete a password" autocomplete="new-password">
-    <label class="auth-label" style="margin-top:1rem">Plano</label>
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.3rem">
-      <label id="planStarter" style="border:1px solid rgba(0,212,160,0.35);background:rgba(0,212,160,0.07);border-radius:8px;padding:.6rem .5rem;cursor:pointer;text-align:center;transition:all .2s">
-        <input type="radio" name="rgPlan" value="starter" checked style="display:none">
-        <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;color:var(--accent);letter-spacing:.06em">STARTER</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">5 sites · €9/mês</div>
-      </label>
-      <label id="planPro" style="border:1px solid var(--border);border-radius:8px;padding:.6rem .5rem;cursor:pointer;text-align:center;transition:all .2s">
-        <input type="radio" name="rgPlan" value="professional" style="display:none">
-        <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.06em">PRO</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">15 sites · €15/mês</div>
-      </label>
-      <label id="planAgency" style="border:1px solid var(--border);border-radius:8px;padding:.6rem .5rem;cursor:pointer;text-align:center;transition:all .2s">
-        <input type="radio" name="rgPlan" value="agency" style="display:none">
-        <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;color:var(--muted);letter-spacing:.06em">AGENCY</div>
-        <div style="font-size:.7rem;color:var(--muted);margin-top:.2rem">30 sites · €29/mês</div>
-      </label>
-    </div>
+
     <button id="rgBtn" class="auth-btn" style="margin-top:1.2rem">Criar conta →</button>
     <div id="rgErr" class="auth-err"></div>
     <button class="auth-link" onclick="showScreen('screenLogin')">Já tenho conta — <span>Entrar</span></button>
@@ -688,25 +671,6 @@ function showScreen(id){
 }
 
 // ── REGISTER ─────────────────────────────────────────────
-// Plan selector highlight
-document.querySelectorAll('input[name="rgPlan"]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    ['planStarter','planPro','planAgency'].forEach(id => {
-      const el = $(id); if(!el) return;
-      el.style.borderColor = 'var(--border)';
-      el.style.background = 'transparent';
-      el.querySelector('[style*="font-weight:700"]').style.color = 'var(--muted)';
-    });
-    const sel = document.querySelector('input[name="rgPlan"]:checked');
-    if(sel) {
-      const lbl = sel.closest('label');
-      lbl.style.borderColor = 'rgba(0,212,160,0.35)';
-      lbl.style.background = 'rgba(0,212,160,0.07)';
-      lbl.querySelector('[style*="font-weight:700"]').style.color = 'var(--accent)';
-    }
-  });
-});
-
 $('rgBtn') && $('rgBtn').addEventListener('click', doRegister);
 $('rgPass2') && $('rgPass2').addEventListener('keydown', e=>{if(e.key==='Enter')doRegister();});
 
@@ -716,7 +680,7 @@ async function doRegister(){
   const email=$('rgEmail').value.trim();
   const pass=$('rgPass').value;
   const pass2=$('rgPass2').value;
-  const plan=(document.querySelector('input[name="rgPlan"]:checked')||{value:'starter'}).value;
+  const plan='starter'; // plano atribuído manualmente pelo admin
 
   err.textContent='';
   if(!name){err.textContent='Introduz o teu nome.';return;}
@@ -726,7 +690,7 @@ async function doRegister(){
 
   btn.disabled=true; btn.textContent='A criar conta...';
   try{
-    const r=await fetch(API+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass,plan})});
+    const r=await fetch(API+'/api/auth/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,password:pass})});
     const d=await r.json();
     if(d.success){
       token=d.data.token; user=d.data.user;
