@@ -1288,154 +1288,6 @@ nav.scrolled {
   vertical-align: middle;
 }
 
-/* pricing-grid original — substituído acima */
-.pricing-grid-old {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 4rem;
-}
-
-.pricing-card {
-  background: var(--s1);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 2.2rem 2rem;
-  position: relative;
-  transition: all .35s cubic-bezier(.25,.8,.25,1);
-  overflow: hidden;
-}
-.pricing-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,212,160,0.05) 0%, transparent 70%);
-  opacity: 0;
-  transition: opacity .4s;
-}
-.pricing-card:hover {
-  border-color: rgba(0,212,160,0.15);
-  transform: translateY(-5px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,212,160,0.05);
-}
-.pricing-card:hover::before { opacity: 1; }
-.pricing-card.featured {
-  border-color: rgba(0,212,160,0.25);
-  background: linear-gradient(170deg, rgba(0,212,160,0.06) 0%, var(--s1) 40%);
-  box-shadow: 0 0 60px rgba(0,212,160,0.1), 0 0 0 1px rgba(0,212,160,0.1);
-}
-.pricing-card.featured::after {
-  content: 'Mais Popular';
-  position: absolute;
-  top: -1px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--accent), #00a07a);
-  color: #050e09;
-  font-size: .62rem;
-  font-weight: 800;
-  padding: .3rem 1rem;
-  border-radius: 0 0 10px 10px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.pricing-name {
-  font-family: 'Syne', sans-serif;
-  font-size: .8rem;
-  font-weight: 700;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: .1em;
-  margin-bottom: .8rem;
-}
-.pricing-price {
-  display: flex;
-  align-items: baseline;
-  gap: .3rem;
-  margin-bottom: .4rem;
-}
-.pricing-amount {
-  font-family: 'Syne', sans-serif;
-  font-size: 3rem;
-  font-weight: 800;
-  letter-spacing: -.04em;
-  line-height: 1;
-}
-.pricing-currency {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--muted);
-  align-self: flex-start;
-  padding-top: .4rem;
-}
-.pricing-period {
-  font-size: .78rem;
-  color: var(--muted);
-}
-.pricing-desc {
-  font-size: .78rem;
-  color: var(--dim);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-}
-.pricing-divider {
-  height: 1px;
-  background: var(--border);
-  margin-bottom: 1.5rem;
-}
-.pricing-features {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: .65rem;
-  margin-bottom: 2rem;
-}
-.pricing-feature {
-  display: flex;
-  align-items: flex-start;
-  gap: .6rem;
-  font-size: .8rem;
-  color: var(--muted);
-  line-height: 1.5;
-}
-.pricing-feature-icon {
-  color: var(--accent);
-  flex-shrink: 0;
-  margin-top: .15rem;
-  font-size: .75rem;
-}
-.pricing-btn {
-  width: 100%;
-  padding: .8rem;
-  border-radius: 8px;
-  font-size: .85rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Figtree', sans-serif;
-  border: none;
-  transition: all .2s;
-}
-.pricing-btn.outline {
-  background: transparent;
-  border: 1px solid var(--border2);
-  color: var(--text);
-}
-.pricing-btn.outline:hover {
-  background: rgba(255,255,255,0.04);
-  border-color: var(--border3);
-}
-.pricing-btn.solid {
-  background: linear-gradient(135deg, var(--accent), #00a07a);
-  color: #050e09;
-  box-shadow: 0 0 20px rgba(0,212,160,0.2);
-}
-.pricing-btn.solid:hover {
-  box-shadow: 0 4px 30px rgba(0,212,160,0.35);
-  transform: translateY(-1px);
-}
-
 /* ── SECURITY SHOWCASE ────────────────────────────────────── */
 .security {
   padding: var(--pad) 0;
@@ -1818,7 +1670,7 @@ footer {
 
 <!-- ── VALIDATION BANNER ────────────────────────────────── -->
 <div class="validation-banner">
-  🚀 <strong>WPVelo está em validação de mercado.</strong> Se o produto resolve um problema real para ti, podes começar hoje ao preço de early adopter — garantido por escrito.
+  🚀 <strong>WPVelo está em validação de mercado.</strong> Se o produto resolve um problema real para ti, podes começar hoje ao preço de early adopter.
   <span class="val-spots"><span class="val-dot"></span> 8 vagas restantes</span>
 </div>
 
@@ -2370,7 +2222,7 @@ footer {
     <div class="mb-header">
       <div class="section-label">Preços</div>
       <h2 class="section-title reveal">Simples e transparente.</h2>
-      <p class="section-sub reveal" style="margin:1rem auto 0">Preço de <strong style="color:var(--accent)">early adopter</strong> — garantido para sempre. <br>14 dias grátis para testar. Sem cartão de crédito.</p>
+      <p class="section-sub reveal" style="margin:1rem auto 0">Preço de lançamento — <strong style="color:var(--accent)">bloqueado para sempre</strong> para os primeiros subscritores.<br>14 dias grátis para testar. Sem cartão de crédito.</p>
     </div>
     <div class="pricing-grid">
 
@@ -2553,6 +2405,13 @@ footer {
               <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
             </div>
           </li>
+          <li class="pricing-feature" style="background:rgba(0,212,160,0.04);border:1px solid rgba(0,212,160,0.12);border-radius:10px;padding:.7rem .9rem;margin-top:.5rem">
+            <span class="pricing-feature-icon" style="color:var(--accent)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+            <div>
+              <span class="pricing-feature-title" style="color:var(--accent)">Relatório PDF mensal para clientes</span>
+              <span class="pricing-feature-desc" style="color:var(--muted)">Enviado automaticamente — resumo de segurança, performance e actualizações do mês.</span>
+            </div>
+          </li>
             </ul>
           </div>
         </div>
@@ -2645,11 +2504,11 @@ footer {
               <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
             </div>
           </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+          <li class="pricing-feature" style="background:rgba(0,212,160,0.05);border:1px solid rgba(0,212,160,0.15);border-radius:10px;padding:.7rem .9rem;margin-top:.5rem">
+            <span class="pricing-feature-icon" style="color:var(--accent)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
             <div>
-              <span class="pricing-feature-title">Relatórios PDF mensais para clientes<span class="feature-exclusive">✦ Agency</span></span>
-              <span class="pricing-feature-desc">Enviados automaticamente — resumo completo de segurança, performance e actualizações.</span>
+              <span class="pricing-feature-title" style="color:var(--accent)">Relatório PDF mensal — com branding personalizado</span>
+              <span class="pricing-feature-desc" style="color:var(--muted)">Enviado automaticamente com o teu nome e logo. Impressiona os clientes sem esforço.</span>
             </div>
           </li>
             </ul>
