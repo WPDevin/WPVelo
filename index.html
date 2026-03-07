@@ -1029,7 +1029,267 @@ nav.scrolled {
   padding: var(--pad) 0;
 }
 
+/* ══════════════════════════════════════════════════════════
+   PRICING CARDS — Luxury Compact + GSAP Reveal
+══════════════════════════════════════════════════════════ */
 .pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 4rem;
+  align-items: start; /* cards não se esticam */
+}
+
+.pricing-card {
+  background: var(--s1);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0;
+  position: relative;
+  transition: border-color .35s, box-shadow .35s;
+  overflow: hidden;
+}
+/* Linha de cor no topo — identidade visual */
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,212,160,0.3), transparent);
+  transition: opacity .4s;
+  opacity: 0;
+}
+.pricing-card:hover::before { opacity: 1; }
+.pricing-card.featured {
+  border-color: rgba(0,212,160,0.22);
+  background: linear-gradient(170deg, rgba(0,212,160,0.055) 0%, var(--s1) 45%);
+  box-shadow: 0 0 50px rgba(0,212,160,0.08), 0 0 0 1px rgba(0,212,160,0.08);
+}
+.pricing-card.featured::before {
+  opacity: 1;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* Badge "Mais Popular" — minimalista acima do card */
+.pricing-popular-badge {
+  display: flex;
+  justify-content: center;
+  margin-bottom: .5rem;
+}
+.pricing-popular-badge span {
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  color: #050e09;
+  font-size: .6rem;
+  font-weight: 800;
+  padding: .25rem .9rem;
+  border-radius: 20px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+/* Placeholder para alinhar cards sem badge */
+.pricing-badge-spacer { height: 1.4rem; }
+
+/* ── Header visível ──────────────────────────────────── */
+.pricing-head {
+  padding: 1.8rem 1.8rem 1.5rem;
+}
+.pricing-name {
+  font-family: 'Syne', sans-serif;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  margin-bottom: .9rem;
+}
+.pricing-price {
+  display: flex;
+  align-items: baseline;
+  gap: .25rem;
+  margin-bottom: .6rem;
+}
+.pricing-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -.04em;
+  line-height: 1;
+}
+.pricing-currency {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--muted);
+  align-self: flex-start;
+  padding-top: .35rem;
+}
+.pricing-period {
+  font-size: .75rem;
+  color: var(--dim);
+}
+.pricing-tagline {
+  font-size: .78rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin-bottom: 1.3rem;
+}
+
+/* Sites badge — destaque visual */
+.pricing-sites-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: .45rem .8rem;
+  font-size: .78rem;
+  color: var(--text);
+  font-weight: 500;
+}
+.pricing-sites-badge svg { color: var(--accent); flex-shrink: 0; }
+
+/* ── Botão principal — sempre visível ──────────────── */
+.pricing-cta-wrap {
+  padding: 0 1.8rem 1.4rem;
+}
+.pricing-btn {
+  width: 100%;
+  padding: .82rem;
+  border-radius: 10px;
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  border: none;
+  transition: all .25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  text-decoration: none;
+}
+.pricing-btn.outline {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text);
+}
+.pricing-btn.outline:hover {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.18);
+}
+.pricing-btn.solid {
+  background: linear-gradient(135deg, var(--accent), #00a07a);
+  color: #050e09;
+  box-shadow: 0 0 20px rgba(0,212,160,0.18);
+}
+.pricing-btn.solid:hover {
+  box-shadow: 0 4px 30px rgba(0,212,160,0.32);
+  transform: translateY(-1px);
+}
+
+/* ── Divisor antes do "ver mais" ─────────────────── */
+.pricing-expand-trigger {
+  width: 100%;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--border);
+  padding: .75rem 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-family: 'Figtree', sans-serif;
+  font-size: .75rem;
+  color: var(--dim);
+  transition: color .2s, background .2s;
+}
+.pricing-expand-trigger:hover {
+  color: var(--muted);
+  background: rgba(255,255,255,0.02);
+}
+.pricing-expand-icon {
+  width: 18px; height: 18px;
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: transform .3s, border-color .2s;
+}
+.pricing-expand-trigger:hover .pricing-expand-icon {
+  border-color: rgba(255,255,255,0.2);
+}
+.pricing-expand-trigger.open .pricing-expand-icon {
+  transform: rotate(180deg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Conteúdo expandível ────────────────────────── */
+.pricing-details {
+  height: 0;
+  overflow: hidden;
+}
+.pricing-details-inner {
+  padding: 1rem 1.8rem 1.6rem;
+  border-top: 1px solid rgba(255,255,255,0.03);
+}
+
+.pricing-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .7rem;
+}
+.pricing-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  font-size: .8rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.pricing-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: .15rem;
+}
+.pricing-feature-title {
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--text);
+  display: block;
+}
+.pricing-feature-desc {
+  font-size: .72rem;
+  color: var(--dim);
+  display: block;
+  margin-top: .08rem;
+  line-height: 1.5;
+}
+
+/* Agency exclusive badge */
+.feature-exclusive {
+  display: inline-flex;
+  align-items: center;
+  gap: .3rem;
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.2);
+  border-radius: 6px;
+  padding: .15rem .5rem;
+  font-size: .6rem;
+  font-weight: 700;
+  color: #a78bfa;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-left: .4rem;
+  vertical-align: middle;
+}
+
+/* pricing-grid original — substituído acima */
+.pricing-grid-old {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
@@ -1521,7 +1781,8 @@ footer {
 
   /* Pricing */
   .pricing-grid { max-width: 100%; }
-  .pricing-card { padding: 1.5rem; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+  .pricing-badge-spacer { display: none; }
 
   /* Contact */
   .contact-form { padding: 1.5rem; }
@@ -2113,277 +2374,287 @@ footer {
     </div>
     <div class="pricing-grid">
 
-      <!-- STARTER -->
-      <div class="pricing-card reveal">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem">
+      <!-- ── STARTER ────────────────────────────────── -->
+      <div class="pricing-badge-spacer"></div>
+      <div class="pricing-card" data-plan="starter">
+        <div class="pricing-head">
           <div class="pricing-name">Starter</div>
-          <span style="background:rgba(0,212,160,0.1);border:1px solid rgba(0,212,160,0.2);border-radius:12px;padding:.2rem .65rem;font-size:.62rem;font-weight:700;color:var(--accent);letter-spacing:.05em">EARLY ADOPTER</span>
+          <div class="pricing-price">
+            <span class="pricing-currency">€</span>
+            <span class="pricing-amount">7</span>
+            <span class="pricing-period">/mês</span>
+          </div>
+          <div class="pricing-tagline">Para freelancers a começar a gerir sites WordPress de forma profissional.</div>
+          <div class="pricing-sites-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Até 5 sites WordPress
         </div>
-        <div class="pricing-price">
-          <span class="pricing-currency">€</span>
-          <span class="pricing-amount">9</span>
-          <span class="pricing-period">/mês</span>
         </div>
-        <div style="font-size:.75rem;color:var(--dim);margin-bottom:1.2rem;display:flex;align-items:center;gap:.4rem">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Até <strong style="color:var(--text);margin:0 .2rem">5 sites</strong> WordPress
+        <div class="pricing-cta-wrap">
+          <a href="wpvelo-dashboard.html" class="pricing-btn outline">
+            Começar grátis 14 dias
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
         </div>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features" style="gap:.9rem">
+        <button class="pricing-expand-trigger" data-target="details-starter" aria-expanded="false">
+          <span>Ver funcionalidades incluídas</span>
+          <span class="pricing-expand-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div class="pricing-details" id="details-starter">
+          <div class="pricing-details-inner">
+            <ul class="pricing-features">
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Monitorização de segurança</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">14 verificações automáticas — SSL, debug, XML-RPC e mais</div>
+              <span class="pricing-feature-title">Monitorização de segurança</span>
+              <span class="pricing-feature-desc">14 verificações automáticas — SSL, debug, XML-RPC, admin exposto e mais.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Score de segurança 0–100</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Calculado automaticamente com recomendações claras</div>
+              <span class="pricing-feature-title">Score de segurança</span>
+              <span class="pricing-feature-desc">Calculado automaticamente. Recomendações accionáveis para cada site.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Performance e uptime</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Tempo de resposta, memória PHP, cache activo</div>
+              <span class="pricing-feature-title">Tempo de resposta e cache</span>
+              <span class="pricing-feature-desc">Tempo de carregamento, memória PHP, cache activo e uptime contínuo.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Comandos remotos</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Actualiza, limpa cache, activa/desactiva plugins</div>
+              <span class="pricing-feature-title">Gestão de plugins</span>
+              <span class="pricing-feature-desc">Versões instaladas, actualizações disponíveis e vulnerabilidades conhecidas.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Alertas automáticos</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Notificações quando algo muda ou falha</div>
+              <span class="pricing-feature-title">Comandos remotos</span>
+              <span class="pricing-feature-desc">Actualiza plugins, limpa cache, activa/desactiva — sem SSH nem FTP.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Dashboard centralizado</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Todos os sites numa vista única</div>
+              <span class="pricing-feature-title">Alertas automáticos</span>
+              <span class="pricing-feature-desc">Notificações imediatas quando algo crítico muda ou falha.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Intervalo configurável</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Dados actualizados a cada 15 ou 30 minutos</div>
+              <span class="pricing-feature-title">Sincronização automática</span>
+              <span class="pricing-feature-desc">Dados enviados a cada 15 ou 30 minutos — configurável.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Suporte em português</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Resposta em 48 horas úteis</div>
+              <span class="pricing-feature-title">Suporte em português</span>
+              <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
             </div>
           </li>
-        </ul>
-        <a href="wpvelo-dashboard.html" class="pricing-btn outline">Começar grátis 14 dias →</a>
+            </ul>
+          </div>
+        </div>
       </div>
 
-      <!-- PROFESSIONAL -->
-      <div class="pricing-card featured reveal">
-        <div class="pricing-name">Professional</div>
-        <div class="pricing-price">
-          <span class="pricing-currency">€</span>
-          <span class="pricing-amount">19</span>
-          <span class="pricing-period">/mês</span>
+      <!-- ── PROFESSIONAL ───────────────────────────── -->
+      <div class="pricing-popular-badge"><span>Mais Popular</span></div>
+      <div class="pricing-card featured" data-plan="professional">
+        <div class="pricing-head">
+          <div class="pricing-name">Professional</div>
+          <div class="pricing-price">
+            <span class="pricing-currency">€</span>
+            <span class="pricing-amount">15</span>
+            <span class="pricing-period">/mês</span>
+          </div>
+          <div class="pricing-tagline">Para freelancers estabelecidos com uma carteira crescente de clientes.</div>
+          <div class="pricing-sites-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Até 15 sites WordPress
         </div>
-        <div style="font-size:.75rem;color:var(--dim);margin-bottom:1.2rem;display:flex;align-items:center;gap:.4rem">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Até <strong style="color:var(--text);margin:0 .2rem">15 sites</strong> WordPress
         </div>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features" style="gap:.9rem">
+        <div class="pricing-cta-wrap">
+          <a href="wpvelo-dashboard.html" class="pricing-btn solid">
+            Começar grátis 14 dias
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <button class="pricing-expand-trigger" data-target="details-professional" aria-expanded="false">
+          <span>Ver funcionalidades incluídas</span>
+          <span class="pricing-expand-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div class="pricing-details" id="details-professional">
+          <div class="pricing-details-inner">
+            <ul class="pricing-features">
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Monitorização de segurança</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">14 verificações automáticas — SSL, debug, XML-RPC e mais</div>
+              <span class="pricing-feature-title">Monitorização de segurança</span>
+              <span class="pricing-feature-desc">14 verificações automáticas — SSL, debug, XML-RPC, admin exposto e mais.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Score de segurança 0–100</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Calculado automaticamente com recomendações claras</div>
+              <span class="pricing-feature-title">Score de segurança</span>
+              <span class="pricing-feature-desc">Calculado automaticamente. Recomendações accionáveis para cada site.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Performance e uptime</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Tempo de resposta, memória PHP, cache activo</div>
+              <span class="pricing-feature-title">Tempo de resposta e cache</span>
+              <span class="pricing-feature-desc">Tempo de carregamento, memória PHP, cache activo e uptime contínuo.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Comandos remotos</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Actualiza, limpa cache, activa/desactiva plugins</div>
+              <span class="pricing-feature-title">Gestão de plugins</span>
+              <span class="pricing-feature-desc">Versões instaladas, actualizações disponíveis e vulnerabilidades conhecidas.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Alertas automáticos</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Notificações quando algo muda ou falha</div>
+              <span class="pricing-feature-title">Comandos remotos</span>
+              <span class="pricing-feature-desc">Actualiza plugins, limpa cache, activa/desactiva — sem SSH nem FTP.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Dashboard centralizado</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Todos os sites numa vista única</div>
+              <span class="pricing-feature-title">Alertas automáticos</span>
+              <span class="pricing-feature-desc">Notificações imediatas quando algo crítico muda ou falha.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Intervalo configurável</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Dados actualizados a cada 15 ou 30 minutos</div>
+              <span class="pricing-feature-title">Sincronização automática</span>
+              <span class="pricing-feature-desc">Dados enviados a cada 15 ou 30 minutos — configurável.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Suporte em português</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Resposta em 48 horas úteis</div>
+              <span class="pricing-feature-title">Suporte em português</span>
+              <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
             </div>
           </li>
-        </ul>
-        <a href="wpvelo-dashboard.html" class="pricing-btn solid">Começar grátis 14 dias →</a>
+            </ul>
+          </div>
+        </div>
       </div>
 
-      <!-- AGENCY -->
-      <div class="pricing-card reveal">
-        <div class="pricing-name">Agency</div>
-        <div class="pricing-price">
-          <span class="pricing-currency">€</span>
-          <span class="pricing-amount">35</span>
-          <span class="pricing-period">/mês</span>
+      <!-- ── AGENCY ──────────────────────────────────── -->
+      <div class="pricing-badge-spacer"></div>
+      <div class="pricing-card" data-plan="agency">
+        <div class="pricing-head">
+          <div class="pricing-name">Agency</div>
+          <div class="pricing-price">
+            <span class="pricing-currency">€</span>
+            <span class="pricing-amount">25</span>
+            <span class="pricing-period">/mês</span>
+          </div>
+          <div class="pricing-tagline">Para agências que gerem múltiplos clientes e precisam de relatórios profissionais.</div>
+          <div class="pricing-sites-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Sites ilimitados
         </div>
-        <div style="font-size:.75rem;color:var(--dim);margin-bottom:1.2rem;display:flex;align-items:center;gap:.4rem">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <strong style="color:var(--accent);margin-right:.2rem">Sites ilimitados</strong>
         </div>
-        <div class="pricing-divider"></div>
-        <ul class="pricing-features" style="gap:.9rem">
+        <div class="pricing-cta-wrap">
+          <a href="wpvelo-dashboard.html" class="pricing-btn outline">
+            Começar grátis 14 dias
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <button class="pricing-expand-trigger" data-target="details-agency" aria-expanded="false">
+          <span>Ver funcionalidades incluídas</span>
+          <span class="pricing-expand-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+        </button>
+        <div class="pricing-details" id="details-agency">
+          <div class="pricing-details-inner">
+            <ul class="pricing-features">
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Monitorização de segurança</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">14 verificações automáticas — SSL, debug, XML-RPC e mais</div>
+              <span class="pricing-feature-title">Monitorização de segurança</span>
+              <span class="pricing-feature-desc">14 verificações automáticas — SSL, debug, XML-RPC, admin exposto e mais.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Score de segurança 0–100</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Calculado automaticamente com recomendações claras</div>
+              <span class="pricing-feature-title">Score de segurança</span>
+              <span class="pricing-feature-desc">Calculado automaticamente. Recomendações accionáveis para cada site.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Performance e uptime</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Tempo de resposta, memória PHP, cache activo</div>
+              <span class="pricing-feature-title">Tempo de resposta e cache</span>
+              <span class="pricing-feature-desc">Tempo de carregamento, memória PHP, cache activo e uptime contínuo.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Comandos remotos</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Actualiza, limpa cache, activa/desactiva plugins</div>
+              <span class="pricing-feature-title">Gestão de plugins</span>
+              <span class="pricing-feature-desc">Versões instaladas, actualizações disponíveis e vulnerabilidades conhecidas.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Alertas automáticos</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Notificações quando algo muda ou falha</div>
+              <span class="pricing-feature-title">Comandos remotos</span>
+              <span class="pricing-feature-desc">Actualiza plugins, limpa cache, activa/desactiva — sem SSH nem FTP.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Dashboard centralizado</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Todos os sites numa vista única</div>
+              <span class="pricing-feature-title">Alertas automáticos</span>
+              <span class="pricing-feature-desc">Notificações imediatas quando algo crítico muda ou falha.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Intervalo configurável</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Dados actualizados a cada 15 ou 30 minutos</div>
+              <span class="pricing-feature-title">Sincronização automática</span>
+              <span class="pricing-feature-desc">Dados enviados a cada 15 ou 30 minutos — configurável.</span>
             </div>
           </li>
           <li class="pricing-feature">
-            <span class="pricing-feature-icon">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
             <div>
-              <div style="font-size:.82rem;font-weight:500;color:var(--text)">Suporte em português</div>
-              <div style="font-size:.72rem;color:var(--muted);margin-top:.1rem">Resposta em 48 horas úteis</div>
+              <span class="pricing-feature-title">Suporte em português</span>
+              <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
             </div>
           </li>
-        </ul>
-        <a href="wpvelo-dashboard.html" class="pricing-btn outline">Começar grátis 14 dias →</a>
+          <li class="pricing-feature">
+            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            <div>
+              <span class="pricing-feature-title">Relatórios PDF mensais para clientes<span class="feature-exclusive">✦ Agency</span></span>
+              <span class="pricing-feature-desc">Enviados automaticamente — resumo completo de segurança, performance e actualizações.</span>
+            </div>
+          </li>
+            </ul>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -2514,6 +2785,51 @@ document.addEventListener('click', e => {
     menu.classList.remove('visible');
     burger.classList.remove('open');
   }
+});
+
+// ── PRICING EXPAND/COLLAPSE — GSAP premium ───────────────────────
+document.querySelectorAll('.pricing-expand-trigger').forEach(trigger => {
+  trigger.addEventListener('click', () => {
+    const targetId = trigger.dataset.target;
+    const details  = document.getElementById(targetId);
+    const isOpen   = trigger.getAttribute('aria-expanded') === 'true';
+
+    if (isOpen) {
+      // Fechar
+      gsap.to(details, {
+        height: 0,
+        duration: .45,
+        ease: 'power3.inOut',
+        onComplete: () => { details.style.overflow = 'hidden'; }
+      });
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.classList.remove('open');
+      trigger.querySelector('span:first-child').textContent = 'Ver funcionalidades incluídas';
+    } else {
+      // Abrir — medir altura real
+      details.style.height = 'auto';
+      details.style.overflow = 'hidden';
+      const fullH = details.scrollHeight;
+      details.style.height = '0px';
+
+      gsap.to(details, {
+        height: fullH,
+        duration: .55,
+        ease: 'power3.inOut',
+        onComplete: () => { details.style.height = 'auto'; details.style.overflow = 'visible'; }
+      });
+
+      // Animar items da lista com stagger
+      gsap.fromTo(details.querySelectorAll('.pricing-feature'), 
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: .35, stagger: .04, ease: 'power2.out', delay: .15 }
+      );
+
+      trigger.setAttribute('aria-expanded', 'true');
+      trigger.classList.add('open');
+      trigger.querySelector('span:first-child').textContent = 'Fechar';
+    }
+  });
 });
 
 // ── SMOOTH SCROLL PREMIUM ─────────────────────────────────
