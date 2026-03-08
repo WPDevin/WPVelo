@@ -1025,56 +1025,53 @@ nav.scrolled {
 .t-comment { color: var(--dim); font-style: italic; }
 
 /* ── PRICING ──────────────────────────────────────────────── */
-.pricing {
-  padding: var(--pad) 0;
-}
+.pricing { padding: var(--pad) 0; }
 
-/* ══════════════════════════════════════════════════════════
-   PRICING CARDS — Luxury Compact + GSAP Reveal
-══════════════════════════════════════════════════════════ */
+/* Grid — exactamente 3 colunas, 3 filhos directos */
 .pricing-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-top: 4rem;
-  align-items: start; /* cards não se esticam */
+  gap: 1.2rem;
+  margin-top: 3.5rem;
+  align-items: start;
 }
 
+/* Card */
 .pricing-card {
   background: var(--s1);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 0;
-  position: relative;
-  transition: border-color .35s, box-shadow .35s;
   overflow: hidden;
+  position: relative;
+  transition: border-color .3s, box-shadow .3s, transform .3s;
 }
-/* Linha de cor no topo — identidade visual */
-.pricing-card::before {
+.pricing-card:hover {
+  border-color: rgba(255,255,255,.1);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.3);
+}
+.pricing-card.featured {
+  border-color: rgba(0,212,160,0.25);
+  background: linear-gradient(160deg, rgba(0,212,160,0.06) 0%, var(--s1) 55%);
+  box-shadow: 0 0 0 1px rgba(0,212,160,0.08), 0 8px 40px rgba(0,212,160,0.06);
+}
+.pricing-card.featured:hover {
+  border-color: rgba(0,212,160,0.38);
+  box-shadow: 0 0 0 1px rgba(0,212,160,0.15), 0 20px 50px rgba(0,212,160,0.1);
+}
+.pricing-card.featured::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0,212,160,0.3), transparent);
-  transition: opacity .4s;
-  opacity: 0;
-}
-.pricing-card:hover::before { opacity: 1; }
-.pricing-card.featured {
-  border-color: rgba(0,212,160,0.22);
-  background: linear-gradient(170deg, rgba(0,212,160,0.055) 0%, var(--s1) 45%);
-  box-shadow: 0 0 50px rgba(0,212,160,0.08), 0 0 0 1px rgba(0,212,160,0.08);
-}
-.pricing-card.featured::before {
-  opacity: 1;
   background: linear-gradient(90deg, transparent, var(--accent), transparent);
 }
 
-/* Badge "Mais Popular" — minimalista acima do card */
+/* Badge "Mais Popular" — dentro do card, no topo */
 .pricing-popular-badge {
   display: flex;
   justify-content: center;
-  margin-bottom: .5rem;
+  padding: 1rem 0 0;
 }
 .pricing-popular-badge span {
   background: linear-gradient(135deg, var(--accent), #00a07a);
@@ -1086,87 +1083,91 @@ nav.scrolled {
   letter-spacing: .08em;
   text-transform: uppercase;
 }
-/* Placeholder para alinhar cards sem badge */
-.pricing-badge-spacer { height: 1.4rem; }
 
-/* ── Header visível ──────────────────────────────────── */
-.pricing-head {
-  padding: 1.8rem 1.8rem 1.5rem;
-}
-.pricing-name {
-  font-family: 'Syne', sans-serif;
-  font-size: .72rem;
+/* Head */
+.pricing-head { padding: 1.5rem 1.8rem 0; }
+.pricing-plan-tag {
+  font-size: .63rem;
   font-weight: 700;
-  color: var(--dim);
-  text-transform: uppercase;
   letter-spacing: .12em;
-  margin-bottom: .9rem;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1rem;
+  display: block;
 }
-.pricing-price {
+.pricing-amount-row {
   display: flex;
   align-items: baseline;
-  gap: .25rem;
-  margin-bottom: .6rem;
-}
-.pricing-amount {
-  font-family: 'Syne', sans-serif;
-  font-size: 2.8rem;
-  font-weight: 800;
-  letter-spacing: -.04em;
+  gap: .15rem;
+  margin-bottom: .3rem;
   line-height: 1;
 }
 .pricing-currency {
-  font-size: 1rem;
+  font-size: .9rem;
   font-weight: 600;
   color: var(--muted);
-  align-self: flex-start;
-  padding-top: .35rem;
+  padding-bottom: .55rem;
+}
+.pricing-amount {
+  font-family: 'Syne', sans-serif;
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -.05em;
+  color: var(--text);
+  line-height: 1;
 }
 .pricing-period {
   font-size: .75rem;
   color: var(--dim);
+  padding-bottom: .35rem;
 }
 .pricing-tagline {
   font-size: .78rem;
   color: var(--muted);
-  line-height: 1.55;
-  margin-bottom: 1.3rem;
+  line-height: 1.6;
+  margin: .8rem 0 1.2rem;
 }
-
-/* Sites badge — destaque visual */
-.pricing-sites-badge {
+.pricing-sites {
   display: inline-flex;
   align-items: center;
-  gap: .4rem;
+  gap: .45rem;
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border2);
   border-radius: 8px;
-  padding: .45rem .8rem;
-  font-size: .78rem;
-  color: var(--text);
+  padding: .5rem .85rem;
+  font-size: .8rem;
   font-weight: 500;
+  color: var(--text);
+  margin-bottom: 1.4rem;
 }
-.pricing-sites-badge svg { color: var(--accent); flex-shrink: 0; }
+.pricing-card.featured .pricing-sites {
+  background: rgba(0,212,160,0.06);
+  border-color: rgba(0,212,160,0.18);
+}
+.pricing-sites svg { color: var(--accent); flex-shrink: 0; }
+.pricing-sites .sites-num {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  color: var(--accent);
+}
 
-/* ── Botão principal — sempre visível ──────────────── */
-.pricing-cta-wrap {
-  padding: 0 1.8rem 1.4rem;
-}
+/* CTA */
+.pricing-cta-wrap { padding: 0 1.8rem 1.4rem; }
 .pricing-btn {
-  width: 100%;
-  padding: .82rem;
-  border-radius: 10px;
-  font-size: .84rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Figtree', sans-serif;
-  border: none;
-  transition: all .25s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: .5rem;
+  width: 100%;
+  padding: .85rem;
+  border-radius: 10px;
+  font-size: .84rem;
+  font-weight: 600;
+  font-family: var(--font);
   text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all .25s;
 }
 .pricing-btn.outline {
   background: transparent;
@@ -1174,31 +1175,31 @@ nav.scrolled {
   color: var(--text);
 }
 .pricing-btn.outline:hover {
-  background: rgba(255,255,255,0.04);
-  border-color: rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.2);
 }
 .pricing-btn.solid {
-  background: linear-gradient(135deg, var(--accent), #00a07a);
-  color: #050e09;
-  box-shadow: 0 0 20px rgba(0,212,160,0.18);
+  background: linear-gradient(135deg, var(--accent), #009e77);
+  color: #040e09;
+  box-shadow: 0 0 24px rgba(0,212,160,0.2);
 }
 .pricing-btn.solid:hover {
-  box-shadow: 0 4px 30px rgba(0,212,160,0.32);
+  box-shadow: 0 6px 32px rgba(0,212,160,0.38);
   transform: translateY(-1px);
 }
 
-/* ── Divisor antes do "ver mais" ─────────────────── */
+/* Expand trigger */
 .pricing-expand-trigger {
   width: 100%;
   background: none;
   border: none;
   border-top: 1px solid var(--border);
-  padding: .75rem 1.8rem;
+  padding: .8rem 1.8rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
-  font-family: 'Figtree', sans-serif;
+  font-family: var(--font);
   font-size: .75rem;
   color: var(--dim);
   transition: color .2s, background .2s;
@@ -1215,77 +1216,54 @@ nav.scrolled {
   flex-shrink: 0;
   transition: transform .3s, border-color .2s;
 }
-.pricing-expand-trigger:hover .pricing-expand-icon {
-  border-color: rgba(255,255,255,0.2);
-}
 .pricing-expand-trigger.open .pricing-expand-icon {
   transform: rotate(180deg);
   border-color: var(--accent);
   color: var(--accent);
 }
-
-/* ── Conteúdo expandível ────────────────────────── */
-.pricing-details {
-  height: 0;
-  overflow: hidden;
-}
-.pricing-details-inner {
-  padding: 1rem 1.8rem 1.6rem;
-  border-top: 1px solid rgba(255,255,255,0.03);
+.pricing-expand-trigger:hover .pricing-expand-icon {
+  border-color: rgba(255,255,255,.2);
 }
 
-.pricing-features {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: .7rem;
-}
+/* Conteúdo expansível */
+.pricing-details { height: 0; overflow: hidden; }
+.pricing-details-inner { padding: .8rem 1.8rem 1.6rem; }
+.pricing-features { list-style: none; display: flex; flex-direction: column; gap: 0; }
 .pricing-feature {
   display: flex;
   align-items: flex-start;
   gap: .6rem;
-  font-size: .8rem;
-  color: var(--muted);
-  line-height: 1.5;
+  padding: .55rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
 }
-.pricing-feature-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
+.pricing-feature:last-child { border-bottom: none; }
+.pricing-feature-check {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  background: rgba(0,212,160,0.1);
+  display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   margin-top: .15rem;
 }
 .pricing-feature-title {
-  font-size: .8rem;
-  font-weight: 500;
-  color: var(--text);
-  display: block;
+  font-size: .79rem; font-weight: 500; color: var(--text);
+  line-height: 1.35; display: block;
 }
 .pricing-feature-desc {
-  font-size: .72rem;
-  color: var(--dim);
-  display: block;
-  margin-top: .08rem;
-  line-height: 1.5;
+  font-size: .7rem; color: var(--dim);
+  line-height: 1.45; display: block; margin-top: .06rem;
 }
+.pricing-feature-highlight .pricing-feature-title { color: var(--accent); }
+.pricing-feature-highlight .pricing-feature-check { background: rgba(0,212,160,0.18); }
 
-/* Agency exclusive badge */
-.feature-exclusive {
-  display: inline-flex;
-  align-items: center;
-  gap: .3rem;
-  background: rgba(167,139,250,0.1);
-  border: 1px solid rgba(167,139,250,0.2);
-  border-radius: 6px;
-  padding: .15rem .5rem;
-  font-size: .6rem;
-  font-weight: 700;
-  color: #a78bfa;
-  letter-spacing: .06em;
-  text-transform: uppercase;
-  margin-left: .4rem;
-  vertical-align: middle;
+/* Responsive */
+@media (max-width: 900px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* ── SECURITY SHOWCASE ────────────────────────────────────── */
@@ -1576,8 +1554,6 @@ footer {
   /* Features */
   .features-bento { grid-template-columns: 1fr 1fr; }
 
-  /* Pricing */
-  .pricing-grid { grid-template-columns: 1fr; max-width: 420px; margin-left: auto; margin-right: auto; }
 
   /* Sections */
   .how-grid, .security-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
@@ -1632,9 +1608,6 @@ footer {
   .score-ring-val { position: absolute; inset: 0; }
 
   /* Pricing */
-  .pricing-grid { max-width: 100%; }
-  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
-  .pricing-badge-spacer { display: none; }
 
   /* Contact */
   .contact-form { padding: 1.5rem; }
@@ -1693,7 +1666,7 @@ footer {
         <li><a href="#how">Como funciona</a></li>
         <li><a href="#pricing">Preços</a></li>
         <li><a href="#contact">Contacto</a></li>
-        <li><a href="./wpvelo-dashboard.html" style="font-size:.82rem;font-weight:500;color:var(--muted);transition:color .2s;letter-spacing:.02em;cursor:pointer" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Entrar</a></li>
+        <li><a href="./wpvelo-dashboard.html" target="_blank" data-external style="font-size:.82rem;font-weight:500;color:var(--muted);transition:color .2s;letter-spacing:.02em" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted)'">Entrar</a></li>
         <li><a href="#contact" class="nav-cta">Pedir Acesso</a></li>
       </ul>
       <!-- Hamburger mobile -->
@@ -1710,7 +1683,7 @@ footer {
   <a href="#commands" onclick="closeMobileMenu()">Comandos Remotos</a>
   <a href="#how" onclick="closeMobileMenu()">Como funciona</a>
   <a href="#pricing" onclick="closeMobileMenu()">Preços</a>
-  <a href="./wpvelo-dashboard.html">Entrar na conta</a>
+  <a href="./wpvelo-dashboard.html" target="_blank" data-external>Entrar na conta</a>
   <a href="#contact" onclick="closeMobileMenu()" class="nav-cta-mobile">Pedir Acesso →</a>
 </div>
 
@@ -2226,26 +2199,21 @@ footer {
     </div>
     <div class="pricing-grid">
 
-      <!-- ── STARTER ────────────────────────────────── -->
-      <div class="pricing-badge-spacer"></div>
       <div class="pricing-card" data-plan="starter">
         <div class="pricing-head">
-          <div class="pricing-name">Starter</div>
-          <div class="pricing-price">
+          <div class="pricing-plan-tag">Starter</div>
+          <div class="pricing-amount-row">
             <span class="pricing-currency">€</span>
             <span class="pricing-amount">7</span>
             <span class="pricing-period">/mês</span>
           </div>
-          <div class="pricing-tagline">Para freelancers a começar a gerir sites WordPress de forma profissional.</div>
-          <div class="pricing-sites-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Até 5 sites WordPress
-        </div>
+          <div class="pricing-tagline">Para freelancers a gerir os primeiros sites de clientes com profissionalismo.</div>
+          <div class="pricing-sites"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Até <span class="sites-num">5</span> sites WordPress</div>
         </div>
         <div class="pricing-cta-wrap">
-          <a href="./wpvelo-dashboard.html" class="pricing-btn outline">
+          <a href="./wpvelo-dashboard.html" target="_blank" data-external class="pricing-btn outline">
             Começar grátis 14 dias
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
         <button class="pricing-expand-trigger" data-target="details-starter" aria-expanded="false">
@@ -2257,87 +2225,99 @@ footer {
         <div class="pricing-details" id="details-starter">
           <div class="pricing-details-inner">
             <ul class="pricing-features">
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Monitorização de segurança</span>
-              <span class="pricing-feature-desc">14 verificações automáticas — SSL, debug, XML-RPC, admin exposto e mais.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Score de segurança</span>
-              <span class="pricing-feature-desc">Calculado automaticamente. Recomendações accionáveis para cada site.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Tempo de resposta e cache</span>
-              <span class="pricing-feature-desc">Tempo de carregamento, memória PHP, cache activo e uptime contínuo.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Gestão de plugins</span>
-              <span class="pricing-feature-desc">Versões instaladas, actualizações disponíveis e vulnerabilidades conhecidas.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Comandos remotos</span>
-              <span class="pricing-feature-desc">Actualiza plugins, limpa cache, activa/desactiva — sem SSH nem FTP.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Alertas automáticos</span>
-              <span class="pricing-feature-desc">Notificações imediatas quando algo crítico muda ou falha.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Sincronização automática</span>
-              <span class="pricing-feature-desc">Dados enviados a cada 15 ou 30 minutos — configurável.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Suporte em português</span>
-              <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
-            </div>
-          </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">14 verificações de segurança</span>
+                  <span class="pricing-feature-desc">SSL, debug mode, XML-RPC, versão WP e mais</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Score de segurança 0–100</span>
+                  <span class="pricing-feature-desc">Calculado automaticamente em cada sincronização</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Performance e uptime</span>
+                  <span class="pricing-feature-desc">Tempo de resposta, memória PHP, cache activo</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Auditoria de plugins</span>
+                  <span class="pricing-feature-desc">Updates pendentes, vulnerabilidades, versões instaladas</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Comandos remotos</span>
+                  <span class="pricing-feature-desc">Gere o site sem SSH, FTP ou acesso ao WP-Admin</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Alertas em tempo real</span>
+                  <span class="pricing-feature-desc">Email imediato quando algo falha ou está em risco</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Sincronização 15–30 min</span>
+                  <span class="pricing-feature-desc">O plugin envia os dados automaticamente</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Suporte em português</span>
+                  <span class="pricing-feature-desc">Email, resposta em 48 horas úteis</span>
+                </span>
+              </li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- ── PROFESSIONAL ───────────────────────────── -->
-      <div class="pricing-popular-badge"><span>Mais Popular</span></div>
       <div class="pricing-card featured" data-plan="professional">
+        <div class="pricing-popular-badge"><span>Mais Popular</span></div>
         <div class="pricing-head">
-          <div class="pricing-name">Professional</div>
-          <div class="pricing-price">
+          <div class="pricing-plan-tag">Professional</div>
+          <div class="pricing-amount-row">
             <span class="pricing-currency">€</span>
             <span class="pricing-amount">15</span>
             <span class="pricing-period">/mês</span>
           </div>
-          <div class="pricing-tagline">Para freelancers estabelecidos com uma carteira crescente de clientes.</div>
-          <div class="pricing-sites-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Até 15 sites WordPress
-        </div>
+          <div class="pricing-tagline">Para quem tem uma carteira estabelecida e quer escalar sem overhead.</div>
+          <div class="pricing-sites"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg> Até <span class="sites-num">15</span> sites WordPress</div>
         </div>
         <div class="pricing-cta-wrap">
-          <a href="./wpvelo-dashboard.html" class="pricing-btn solid">
+          <a href="./wpvelo-dashboard.html" target="_blank" data-external class="pricing-btn solid">
             Começar grátis 14 dias
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
         <button class="pricing-expand-trigger" data-target="details-professional" aria-expanded="false">
@@ -2349,94 +2329,107 @@ footer {
         <div class="pricing-details" id="details-professional">
           <div class="pricing-details-inner">
             <ul class="pricing-features">
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Monitorização de segurança</span>
-              <span class="pricing-feature-desc">14 verificações automáticas — SSL, debug, XML-RPC, admin exposto e mais.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Score de segurança</span>
-              <span class="pricing-feature-desc">Calculado automaticamente. Recomendações accionáveis para cada site.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Tempo de resposta e cache</span>
-              <span class="pricing-feature-desc">Tempo de carregamento, memória PHP, cache activo e uptime contínuo.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Gestão de plugins</span>
-              <span class="pricing-feature-desc">Versões instaladas, actualizações disponíveis e vulnerabilidades conhecidas.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Comandos remotos</span>
-              <span class="pricing-feature-desc">Actualiza plugins, limpa cache, activa/desactiva — sem SSH nem FTP.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Alertas automáticos</span>
-              <span class="pricing-feature-desc">Notificações imediatas quando algo crítico muda ou falha.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Sincronização automática</span>
-              <span class="pricing-feature-desc">Dados enviados a cada 15 ou 30 minutos — configurável.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Suporte em português</span>
-              <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
-            </div>
-          </li>
-          <li class="pricing-feature" style="background:rgba(0,212,160,0.04);border:1px solid rgba(0,212,160,0.12);border-radius:10px;padding:.7rem .9rem;margin-top:.5rem">
-            <span class="pricing-feature-icon" style="color:var(--accent)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-            <div>
-              <span class="pricing-feature-title" style="color:var(--accent)">Relatório PDF mensal para clientes</span>
-              <span class="pricing-feature-desc" style="color:var(--muted)">Enviado automaticamente — resumo de segurança, performance e actualizações do mês.</span>
-            </div>
-          </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">14 verificações de segurança</span>
+                  <span class="pricing-feature-desc">SSL, debug mode, XML-RPC, versão WP e mais</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Score de segurança 0–100</span>
+                  <span class="pricing-feature-desc">Calculado automaticamente em cada sincronização</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Performance e uptime</span>
+                  <span class="pricing-feature-desc">Tempo de resposta, memória PHP, cache activo</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Auditoria de plugins</span>
+                  <span class="pricing-feature-desc">Updates pendentes, vulnerabilidades, versões instaladas</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Comandos remotos</span>
+                  <span class="pricing-feature-desc">Gere o site sem SSH, FTP ou acesso ao WP-Admin</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Alertas em tempo real</span>
+                  <span class="pricing-feature-desc">Email imediato quando algo falha ou está em risco</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Sincronização 15–30 min</span>
+                  <span class="pricing-feature-desc">O plugin envia os dados automaticamente</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Suporte em português</span>
+                  <span class="pricing-feature-desc">Email, resposta em 48 horas úteis</span>
+                </span>
+              </li>
+              <li class="pricing-feature pricing-feature-highlight">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Relatório PDF mensal</span>
+                  <span class="pricing-feature-desc">Enviado ao cliente com branding da tua agência</span>
+                </span>
+              </li>
             </ul>
           </div>
         </div>
       </div>
 
-      <!-- ── AGENCY ──────────────────────────────────── -->
-      <div class="pricing-badge-spacer"></div>
       <div class="pricing-card" data-plan="agency">
         <div class="pricing-head">
-          <div class="pricing-name">Agency</div>
-          <div class="pricing-price">
+          <div class="pricing-plan-tag">Agency</div>
+          <div class="pricing-amount-row">
             <span class="pricing-currency">€</span>
             <span class="pricing-amount">25</span>
             <span class="pricing-period">/mês</span>
           </div>
-          <div class="pricing-tagline">Para agências que gerem múltiplos clientes e precisam de relatórios profissionais.</div>
-          <div class="pricing-sites-badge">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Sites ilimitados
-        </div>
+          <div class="pricing-tagline">Para agências com múltiplos clientes e volume que exige escalabilidade total.</div>
+          <div class="pricing-sites"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> <span class="sites-num">Sites ilimitados</span></div>
         </div>
         <div class="pricing-cta-wrap">
-          <a href="./wpvelo-dashboard.html" class="pricing-btn outline">
+          <a href="./wpvelo-dashboard.html" target="_blank" data-external class="pricing-btn outline">
             Começar grátis 14 dias
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
         </div>
         <button class="pricing-expand-trigger" data-target="details-agency" aria-expanded="false">
@@ -2448,75 +2441,94 @@ footer {
         <div class="pricing-details" id="details-agency">
           <div class="pricing-details-inner">
             <ul class="pricing-features">
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Monitorização de segurança</span>
-              <span class="pricing-feature-desc">14 verificações automáticas — SSL, debug, XML-RPC, admin exposto e mais.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Score de segurança</span>
-              <span class="pricing-feature-desc">Calculado automaticamente. Recomendações accionáveis para cada site.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Tempo de resposta e cache</span>
-              <span class="pricing-feature-desc">Tempo de carregamento, memória PHP, cache activo e uptime contínuo.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Gestão de plugins</span>
-              <span class="pricing-feature-desc">Versões instaladas, actualizações disponíveis e vulnerabilidades conhecidas.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Comandos remotos</span>
-              <span class="pricing-feature-desc">Actualiza plugins, limpa cache, activa/desactiva — sem SSH nem FTP.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Alertas automáticos</span>
-              <span class="pricing-feature-desc">Notificações imediatas quando algo crítico muda ou falha.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Sincronização automática</span>
-              <span class="pricing-feature-desc">Dados enviados a cada 15 ou 30 minutos — configurável.</span>
-            </div>
-          </li>
-          <li class="pricing-feature">
-            <span class="pricing-feature-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
-            <div>
-              <span class="pricing-feature-title">Suporte em português</span>
-              <span class="pricing-feature-desc">Resposta em 48 horas úteis por email.</span>
-            </div>
-          </li>
-          <li class="pricing-feature" style="background:rgba(0,212,160,0.05);border:1px solid rgba(0,212,160,0.15);border-radius:10px;padding:.7rem .9rem;margin-top:.5rem">
-            <span class="pricing-feature-icon" style="color:var(--accent)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
-            <div>
-              <span class="pricing-feature-title" style="color:var(--accent)">Relatório PDF mensal para clientes</span>
-              <span class="pricing-feature-desc" style="color:var(--muted)">Enviado automaticamente — resumo de segurança, performance e actualizações do mês.</span>
-            </div>
-          </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">14 verificações de segurança</span>
+                  <span class="pricing-feature-desc">SSL, debug mode, XML-RPC, versão WP e mais</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Score de segurança 0–100</span>
+                  <span class="pricing-feature-desc">Calculado automaticamente em cada sincronização</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Performance e uptime</span>
+                  <span class="pricing-feature-desc">Tempo de resposta, memória PHP, cache activo</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Auditoria de plugins</span>
+                  <span class="pricing-feature-desc">Updates pendentes, vulnerabilidades, versões instaladas</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Comandos remotos</span>
+                  <span class="pricing-feature-desc">Gere o site sem SSH, FTP ou acesso ao WP-Admin</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Alertas em tempo real</span>
+                  <span class="pricing-feature-desc">Email imediato quando algo falha ou está em risco</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Sincronização 15–30 min</span>
+                  <span class="pricing-feature-desc">O plugin envia os dados automaticamente</span>
+                </span>
+              </li>
+              <li class="pricing-feature">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Suporte em português</span>
+                  <span class="pricing-feature-desc">Email, resposta em 48 horas úteis</span>
+                </span>
+              </li>
+              <li class="pricing-feature pricing-feature-highlight">
+                <span class="pricing-feature-check">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#00d4a0" stroke-width="3" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <span>
+                  <span class="pricing-feature-title">Relatório PDF mensal</span>
+                  <span class="pricing-feature-desc">Enviado ao cliente com branding da tua agência</span>
+                </span>
+              </li>
             </ul>
           </div>
         </div>
       </div>
 
     </div>
+
     <!-- Nota de pagamento transparente -->
     <div style="text-align:center;margin-top:2.5rem;display:flex;flex-direction:column;align-items:center;gap:.8rem">
       <div style="display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;justify-content:center">
@@ -2693,7 +2705,7 @@ document.querySelectorAll('.pricing-expand-trigger').forEach(trigger => {
 
 // ── SMOOTH SCROLL PREMIUM ─────────────────────────────────
 // Override de todos os links de âncora com GSAP ScrollTo
-document.querySelectorAll('a[href^="#"]').forEach(link => {
+document.querySelectorAll('a[href^="#"]:not([data-external])').forEach(link => {
   link.addEventListener('click', e => {
     const target = link.getAttribute('href');
     if (!target || target === '#') return;
