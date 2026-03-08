@@ -27,6 +27,34 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
 
+/* ── BILLING PLAN CARDS ─────────────────────────────────── */
+.billing-plan-card {
+  background: var(--s2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.4rem 1.2rem;
+  position: relative; cursor: pointer;
+  transition: border-color .25s, transform .2s;
+}
+.billing-plan-card:hover { border-color: rgba(0,212,160,0.2); transform: translateY(-2px); }
+.billing-plan-card.featured { border-color: rgba(0,212,160,0.25); background: linear-gradient(160deg,rgba(0,212,160,0.05),var(--s2)); }
+.billing-plan-card.active-plan { border-color: var(--accent); box-shadow: 0 0 0 1px rgba(0,212,160,0.3); }
+.bpc-label { position:absolute;top:0;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),#00a07a);color:#050e09;font-size:.58rem;font-weight:800;padding:.2rem .8rem;border-radius:0 0 8px 8px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap }
+.bpc-name { font-family:var(--font-display);font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;margin-top:.4rem }
+.bpc-price { font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--text);line-height:1;margin-bottom:.4rem }
+.bpc-price span { font-size:.75rem;font-weight:400;color:var(--muted) }
+.bpc-sites { font-size:.75rem;color:var(--muted);margin-bottom:.8rem }
+.bpc-features { font-size:.72rem;color:var(--dim);line-height:1.9;margin-bottom:1rem }
+.bpc-btn { width:100%;background:var(--s3);border:1px solid var(--border);border-radius:8px;padding:.6rem;color:var(--muted);font-size:.78rem;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .2s }
+.bpc-btn:hover { background:var(--accent2);border-color:var(--accent3);color:var(--accent) }
+
+/* Form elements */
+.form-label { display:block;font-size:.7rem;font-weight:600;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem }
+.form-input { width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;color:var(--text);font-size:.88rem;outline:none;font-family:var(--font);transition:border-color .2s }
+.form-input:focus { border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,212,160,.08) }
+.form-success { background:rgba(0,212,160,0.08);border:1px solid rgba(0,212,160,0.2);border-radius:8px;padding:.7rem 1rem;font-size:.82rem;color:var(--accent) }
+.form-error { background:rgba(240,82,82,0.08);border:1px solid rgba(240,82,82,0.2);border-radius:8px;padding:.7rem 1rem;font-size:.82rem;color:var(--red) }
+.btn-success { background:linear-gradient(135deg,var(--accent),#00a07a);color:#050e09;font-weight:700 }
+.btn-success:hover { opacity:.9 }
+
 /* ── SCROLLBAR ──────────────────────────────────────────── */
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -465,8 +493,20 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15
         <button class="sb-item" data-page="sites"><span class="sb-item-icon">🌐</span> Sites <span class="sb-badge" id="sb-sites-badge">0</span></button>
         <button class="sb-item" data-page="alerts"><span class="sb-item-icon">🔔</span> Alertas <span class="sb-badge red" id="sb-alerts-badge" style="display:none">0</span></button>
       </div>
+      <div class="sb-section" id="sb-agency-section">
+        <span class="sb-section-label">Agency</span>
+        <button class="sb-item" data-page="reports">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Relatórios PDF
+          <span style="margin-left:auto;font-size:.52rem;background:rgba(192,132,252,0.12);color:#c084fc;border:1px solid rgba(192,132,252,0.25);border-radius:4px;padding:.1rem .3rem;letter-spacing:.04em">AGENCY</span>
+        </button>
+      </div>
       <div class="sb-section">
         <span class="sb-section-label">Conta</span>
+        <button class="sb-item" data-page="billing">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+          Plano &amp; Faturação
+        </button>
         <button class="sb-item" data-page="settings"><span class="sb-item-icon">⚙️</span> Definições</button>
       </div>
     </nav>
@@ -749,6 +789,122 @@ async function doForgotPassword(){
   }catch(e){err.textContent='Sem ligação ao servidor.'; btn.disabled=false; btn.textContent='Enviar link de recuperação';}
 }
 
+// ── BILLING & STRIPE ─────────────────────────────────────────────
+async function loadBillingStatus() {
+  try {
+    const r = await fetch(API + '/api/subscriptions/status', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const d = await r.json();
+    if (!d.success) return;
+    const s = d.data;
+
+    // Actualizar display do plano actual
+    const planColors = { starter: '#64748b', professional: '#00d4a0', agency: '#c084fc' };
+    const pc = planColors[s.plan] || '#64748b';
+    const statusLabels = {
+      trialing: '🟢 Período de teste', active: '🟢 Activo',
+      past_due: '🔴 Pagamento em atraso', cancelled: '⚫ Cancelado', free: '⚪ Gratuito'
+    };
+    $('billing-plan-display') && ($('billing-plan-display').innerHTML =
+      `<span style="color:${pc};font-weight:700">${s.name}</span> — ${statusLabels[s.status] || s.status} &nbsp;·&nbsp; €${s.price}/mês`);
+
+    // Mostrar info de trial
+    if (s.status === 'trialing' && $('billing-trial-info')) {
+      $('billing-trial-info').style.display = 'block';
+    }
+
+    // Marcar plano actual nos cards
+    document.querySelectorAll('.billing-plan-card').forEach(c => c.classList.remove('active-plan'));
+    const activePlanCard = $('bplan-' + s.plan);
+    if (activePlanCard) activePlanCard.classList.add('active-plan');
+
+    // Esconder botão do plano actual
+    document.querySelectorAll('.billing-subscribe-btn').forEach(btn => {
+      btn.disabled = btn.dataset.plan === s.plan;
+      if (btn.dataset.plan === s.plan) {
+        btn.textContent = '✓ Plano actual';
+        btn.style.opacity = '.5';
+        btn.style.cursor = 'default';
+      }
+    });
+
+    // Mostrar portal só se tiver stripe
+    const portalBtn = $('billing-portal-btn');
+    if (portalBtn && !s.has_stripe) portalBtn.style.display = 'none';
+
+  } catch(e) { console.warn('loadBillingStatus:', e.message); }
+}
+
+async function subscribePlan(plan) {
+  const btn = document.querySelector(`.billing-subscribe-btn[data-plan="${plan}"]`);
+  const msg = $('billing-msg');
+  if (btn) { btn.disabled = true; btn.textContent = 'A processar...'; }
+  if (msg) msg.style.display = 'none';
+
+  try {
+    const r = await fetch(API + '/api/subscriptions/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ plan })
+    });
+    const d = await r.json();
+    if (d.success && d.data?.url) {
+      window.location.href = d.data.url; // Redireciona para Stripe Checkout
+    } else {
+      if (msg) {
+        msg.style.display = 'block';
+        msg.style.background = 'rgba(240,82,82,0.08)';
+        msg.style.borderLeft = '3px solid var(--red)';
+        msg.style.color = '#f87171';
+        msg.textContent = d.error || 'Pagamentos não configurados ainda. Contacta o suporte.';
+      }
+      if (btn) { btn.disabled = false; btn.textContent = 'Escolher ' + plan.charAt(0).toUpperCase() + plan.slice(1); }
+    }
+  } catch(e) {
+    if (msg) {
+      msg.style.display = 'block';
+      msg.style.background = 'rgba(240,82,82,0.08)';
+      msg.style.color = '#f87171';
+      msg.textContent = 'Erro de ligação. Tenta novamente.';
+    }
+    if (btn) { btn.disabled = false; }
+  }
+}
+
+async function openBillingPortal() {
+  try {
+    const r = await fetch(API + '/api/subscriptions/portal', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const d = await r.json();
+    if (d.success && d.data?.url) window.open(d.data.url, '_blank');
+    else alert(d.error || 'Sem subscrição activa no Stripe.');
+  } catch(e) { alert('Erro de ligação.'); }
+}
+
+// Verificar checkout success/cancelled ao voltar do Stripe
+(function checkCheckoutReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('checkout') === 'success') {
+    const plan = params.get('plan') || '';
+    const planN = plan.charAt(0).toUpperCase() + plan.slice(1);
+    setTimeout(() => {
+      nav('billing');
+      const msg = $('billing-msg');
+      if (msg) {
+        msg.style.display = 'block';
+        msg.style.background = 'rgba(0,212,160,0.08)';
+        msg.style.borderLeft = '3px solid var(--accent)';
+        msg.style.color = 'var(--accent)';
+        msg.textContent = `✓ Plano ${planN} activado! O teu período de 14 dias começa agora.`;
+      }
+    }, 500);
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+})();
+
 // ── LOGOUT ────────────────────────────────────────────────
 function doLogout(){
   token=null; user=null; allSites=[]; allAlerts=[];
@@ -784,14 +940,29 @@ function showApp(){
   $('ui-plan').innerHTML=`<span style="background:${pc}22;color:${pc};border:1px solid ${pc}44;border-radius:6px;padding:.14rem .5rem;font-size:.62rem;font-weight:700;letter-spacing:.04em">${pl}</span>`;
   set('cfg-name',user.name||'—');
   set('cfg-email',user.email||'—');
-  const planLimits={starter:5,professional:15,agency:30};
+  const planLimits={starter:5,professional:15,agency:999};
   const cfgLimit=planLimits[user.plan]||5;
   $('cfg-plan').innerHTML=`<strong style="color:var(--accent)">${pl}</strong> <span style="color:var(--dim)">— até ${cfgLimit} sites</span>`;
   clearInterval(autoRefreshTimer);
   autoRefreshTimer=setInterval(loadAll,2*60*1000);
+  // Polling rápido de comandos quando há pendentes
+  startCommandPolling();
 }
 
 // ── LOAD DATA ─────────────────────────────────────────────
+// ── POLLING RÁPIDO DE COMANDOS ───────────────────────────
+let cmdPollTimer=null;
+function startCommandPolling(){
+  clearInterval(cmdPollTimer);
+  cmdPollTimer=setInterval(async()=>{
+    if(!currentSiteId||!token) return;
+    // Só faz polling rápido se estiver na página de detalhes com comandos pendentes
+    const hasPending=document.querySelector('.cmd-status-pending,.cmd-status-executing');
+    if(!hasPending) return;
+    await loadCommandHistory(currentSiteId);
+  },15000); // a cada 15 segundos
+}
+
 async function loadAll(){
   try{
     const h={'Authorization':'Bearer '+token};
@@ -801,6 +972,7 @@ async function loadAll(){
     ]);
     const dd=await dr.json(), ad=await ar.json();
     if(!dd.success){doLogout();return;}
+    loadBillingStatus();
     allSites=dd.data.sites||[];
     allAlerts=ad.success?(ad.data.alerts||[]):[];
     renderAll(dd.data);
@@ -810,9 +982,6 @@ async function loadAll(){
       const updated=allSites.find(s=>String(s.id)===String(currentSiteId));
       if(updated){
         renderSiteDetail(updated);
-        const psVal=document.getElementById('ps-score-mobile');
-        const hasAnalysis=psVal&&psVal.textContent&&psVal.textContent.trim()!=='—'&&!psVal.querySelector('.spinner');
-        if(!hasAnalysis) runAnalysis(currentSiteId);
         loadCommandHistory(currentSiteId);
       }
     }
@@ -830,7 +999,7 @@ function renderAll(data){
   const avgUp=uptimes.length?(uptimes.reduce((a,b)=>a+b)/uptimes.length).toFixed(1):null;
 
   // Sites card com barra de limite
-  const planLimitsUI={starter:5,professional:15,agency:30};
+  const planLimitsUI={starter:5,professional:15,agency:999};
   const sitesLimit=planLimitsUI[user?.plan]||5;
   const sitesUsed=sites.length;
   const pct=Math.min(100,Math.round((sitesUsed/sitesLimit)*100));
@@ -1408,9 +1577,10 @@ function nav(pageId){
   if(page) page.classList.add('active');
   const btn=document.querySelector(`[data-page="${pageId}"]`);
   if(btn) btn.classList.add('active');
-  const titles={dashboard:'Dashboard',sites:'Sites',alerts:'Alertas',settings:'Definições','site-detail':'Detalhes do Site'};
+  const titles={dashboard:'Dashboard',sites:'Sites',alerts:'Alertas',settings:'Definições',billing:'Plano & Faturação',reports:'Relatórios PDF','site-detail':'Detalhes do Site'};
   set('ui-page-title',titles[pageId]||pageId);
   if(pageId==='settings') renderApiKeys();
+  if(pageId==='billing') loadBillingStatus();
   closeSidebar();
 }
 document.querySelectorAll('.sb-item[data-page]').forEach(btn=>{
@@ -1520,7 +1690,7 @@ async function loadCommandHistory(siteId) {
       const when = c.completed_at || c.created_at;
       const ago = when ? fmtDate(when) : '—';
       const result = c.result?.message ? ` — ${esc(c.result.message).slice(0,80)}` : '';
-      return `<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--border)">
+      return `<div class="cmd-status-${c.status}" style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--border)">
         <span style="font-size:.8rem;flex-shrink:0">${statusIcons[c.status]||'?'}</span>
         <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(cmdLabels[c.type]||c.type)}<span style="${statusColors[c.status]||''};font-size:.7rem">${result}</span></span>
         <span style="color:var(--dim);font-size:.68rem;flex-shrink:0">${ago}</span>
@@ -1544,7 +1714,234 @@ async function cancelCommand(cmdId, siteId) {
   } catch(e) {}
 }
 
-Object.assign(window,{nav,showSiteDetail,doLogout,showScreen,showAddSiteModal,doAddSite,confirmRemoveSite,doRemoveSite,doChangePassword,copyApiKey,closeModal,runAnalysis,sendCommand,loadCommandHistory,cancelCommand});
+
+// ═══════════════════════════════════════════════════════════
+// BILLING & SUBSCRIPTIONS
+// ═══════════════════════════════════════════════════════════
+
+async function loadBillingStatus() {
+  try {
+    const r = await fetch(API + '/api/subscriptions/status', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const d = await r.json();
+    if (!d.success) return;
+    const s = d.data;
+
+    // Atualizar sidebar plan display
+    const planEl = document.getElementById('ui-plan');
+    if (planEl) planEl.textContent = s.name + ' · ' + (s.status === 'trialing' ? 'Trial' : s.status);
+
+    // Página billing
+    const nameEl = document.getElementById('billing-plan-name');
+    const priceEl = document.getElementById('billing-plan-price');
+    if (nameEl) nameEl.textContent = s.name;
+    if (priceEl) priceEl.textContent = '€' + s.price + '/mês';
+
+    // Badge de status
+    const statusBadge = document.getElementById('billing-status-badge');
+    if (statusBadge) {
+      const statusColors = { active:'var(--accent)', trialing:'var(--blue)', past_due:'var(--orange)', cancelled:'var(--red)' };
+      const statusLabels = { active:'Activo', trialing:'Trial (14 dias)', past_due:'Pagamento em atraso', cancelled:'Cancelado' };
+      const col = statusColors[s.status] || 'var(--muted)';
+      statusBadge.innerHTML = `<span style="background:rgba(0,0,0,.2);border:1px solid ${col};border-radius:20px;padding:.2rem .7rem;font-size:.72rem;font-weight:700;color:${col}">${statusLabels[s.status] || s.status}</span>`;
+    }
+
+    // Mostrar/ocultar secção Agency no sidebar
+    const agencySection = document.getElementById('sb-agency-section');
+    if (agencySection) {
+      agencySection.style.display = s.plan === 'agency' ? 'block' : 'none';
+    }
+
+    // Marcar plano activo nos billing cards
+    document.querySelectorAll('.billing-plan-card').forEach(c => {
+      c.classList.toggle('active-plan', c.dataset.plan === s.plan);
+      const btn = c.querySelector('.bpc-btn');
+      if (btn) btn.textContent = c.dataset.plan === s.plan ? '✓ Plano actual' : 'Selecionar';
+    });
+
+    // Reports gate
+    const gate    = document.getElementById('reports-agency-gate');
+    const content = document.getElementById('reports-agency-content');
+    if (gate && content) {
+      gate.style.display    = s.plan !== 'agency' ? 'block' : 'none';
+      content.style.display = s.plan === 'agency' ? 'block' : 'none';
+      if (s.plan === 'agency') loadReportSites();
+    }
+
+  } catch(e) { console.warn('Billing status error:', e); }
+}
+
+async function selectBillingPlan(plan) {
+  const msgEl = document.getElementById('billing-checkout-msg');
+  if (msgEl) { msgEl.style.display='block'; msgEl.textContent='A preparar checkout...'; }
+  try {
+    const r = await fetch(API + '/api/subscriptions/checkout', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({ plan })
+    });
+    const d = await r.json();
+    if (d.success) {
+      window.location.href = d.data.url;
+    } else if (d.setup_needed) {
+      if (msgEl) msgEl.textContent = '⚠️ Pagamentos ainda não configurados. O sistema está em fase beta — usa o formulário de contacto na landing page.';
+    } else {
+      if (msgEl) msgEl.textContent = d.error || 'Erro ao criar sessão de pagamento.';
+    }
+  } catch(e) {
+    if (msgEl) msgEl.textContent = 'Erro de ligação.';
+  }
+}
+
+async function openBillingPortal() {
+  try {
+    const r = await fetch(API + '/api/subscriptions/portal', {
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token}
+    });
+    const d = await r.json();
+    if (d.success) window.open(d.data.url, '_blank');
+    else alert(d.error || 'Sem subscrição activa no Stripe.');
+  } catch(e) { alert('Erro de ligação.'); }
+}
+
+// Verificar checkout redirect
+(function checkCheckoutReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('checkout') === 'success') {
+    setTimeout(() => {
+      nav('billing');
+      loadBillingStatus();
+    }, 500);
+    history.replaceState({}, '', window.location.pathname);
+  }
+})();
+
+// ═══════════════════════════════════════════════════════════
+// REPORTS (Agency)
+// ═══════════════════════════════════════════════════════════
+
+async function loadReportSites() {
+  const sel = document.getElementById('report-site-select');
+  if (!sel || !allSites.length) return;
+  sel.innerHTML = '<option value="">Seleciona um site...</option>' +
+    allSites.map(s => `<option value="${s.id}">${s.site_name || s.site_url}</option>`).join('');
+}
+
+async function loadReportSettings() {
+  const siteId = document.getElementById('report-site-select')?.value;
+  if (!siteId) return;
+  try {
+    const r = await fetch(API + '/api/reports/settings/' + siteId, {
+      headers: {'Authorization': 'Bearer ' + token}
+    });
+    const d = await r.json();
+    if (d.success && d.data) {
+      document.getElementById('report-client-name').value  = d.data.client_name || '';
+      document.getElementById('report-client-email').value = d.data.client_email || '';
+      document.getElementById('report-agency-name').value  = d.data.agency_name || '';
+      document.getElementById('report-monthly').checked    = d.data.send_monthly !== false;
+    }
+  } catch(e) {}
+}
+
+async function saveReportSettings() {
+  const siteId = document.getElementById('report-site-select')?.value;
+  const msgEl  = document.getElementById('report-msg');
+  const errEl  = document.getElementById('report-err');
+  msgEl.style.display='none'; errEl.style.display='none';
+
+  if (!siteId) { errEl.textContent='Seleciona um site.'; errEl.style.display='block'; return; }
+
+  try {
+    const r = await fetch(API + '/api/reports/settings', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({
+        site_id:      parseInt(siteId),
+        client_name:  document.getElementById('report-client-name').value,
+        client_email: document.getElementById('report-client-email').value,
+        agency_name:  document.getElementById('report-agency-name').value,
+        send_monthly: document.getElementById('report-monthly').checked,
+      })
+    });
+    const d = await r.json();
+    if (d.success) { msgEl.textContent='✓ Configuração guardada.'; msgEl.style.display='block'; }
+    else { errEl.textContent = d.error; errEl.style.display='block'; }
+  } catch(e) { errEl.textContent='Erro de ligação.'; errEl.style.display='block'; }
+}
+
+async function previewReport() {
+  const siteId = document.getElementById('report-site-select')?.value;
+  if (!siteId) { alert('Seleciona um site primeiro.'); return; }
+  try {
+    const r = await fetch(API + '/api/reports/generate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({ site_id: parseInt(siteId) })
+    });
+    const d = await r.json();
+    if (d.success) {
+      const w = window.open('', '_blank');
+      w.document.write(d.data.html);
+      w.document.close();
+    } else { alert(d.error); }
+  } catch(e) { alert('Erro ao gerar relatório.'); }
+}
+
+async function sendReportNow() {
+  const siteId = document.getElementById('report-site-select')?.value;
+  const btn    = document.getElementById('send-report-btn');
+  const msgEl  = document.getElementById('report-msg');
+  const errEl  = document.getElementById('report-err');
+  msgEl.style.display='none'; errEl.style.display='none';
+
+  if (!siteId) { errEl.textContent='Seleciona um site.'; errEl.style.display='block'; return; }
+
+  btn.disabled=true; btn.textContent='A enviar...';
+  try {
+    const r = await fetch(API + '/api/reports/send', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body: JSON.stringify({ site_id: parseInt(siteId) })
+    });
+    const d = await r.json();
+    if (d.success) {
+      msgEl.textContent='✓ ' + d.data.message; msgEl.style.display='block';
+      loadReportHistory();
+    } else { errEl.textContent=d.error; errEl.style.display='block'; }
+  } catch(e) { errEl.textContent='Erro de ligação.'; errEl.style.display='block'; }
+  finally { btn.disabled=false; btn.innerHTML='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Enviar agora'; }
+}
+
+async function loadReportHistory() {
+  const el = document.getElementById('reports-history');
+  if (!el) return;
+  try {
+    const r = await fetch(API + '/api/reports', {
+      headers: {'Authorization': 'Bearer ' + token}
+    });
+    const d = await r.json();
+    if (!d.success || !d.data.reports.length) {
+      el.innerHTML = '<div class="empty"><p>Nenhum relatório enviado ainda.</p></div>';
+      return;
+    }
+    el.innerHTML = `<table class="sites-table">
+      <thead><tr><th>Site</th><th>Período</th><th>Enviado para</th><th>Estado</th><th>Data</th></tr></thead>
+      <tbody>${d.data.reports.map(r => `
+        <tr>
+          <td>${r.site_name || r.site_url}</td>
+          <td>${r.period}</td>
+          <td style="color:var(--muted)">${r.client_email}</td>
+          <td><span style="color:${r.status==='sent'?'var(--accent)':'var(--red)'}">${r.status==='sent'?'✓ Enviado':'✗ Falhou'}</span></td>
+          <td style="color:var(--dim)">${new Date(r.created_at).toLocaleDateString('pt-PT')}</td>
+        </tr>`).join('')}
+      </tbody></table>`;
+  } catch(e) {}
+}
+
+Object.assign(window,{nav,showSiteDetail,doLogout,showScreen,showAddSiteModal,doAddSite,confirmRemoveSite,doRemoveSite,doChangePassword,copyApiKey,closeModal,runAnalysis,sendCommand,loadCommandHistory,cancelCommand,togglePricing:undefined,selectBillingPlan,openBillingPortal,saveReportSettings,previewReport,sendReportNow,loadReportSettings});
 
 // ── INIT ──────────────────────────────────────────────────
 (function(){
@@ -1562,4 +1959,171 @@ Object.assign(window,{nav,showSiteDetail,doLogout,showScreen,showAddSiteModal,do
 })();
 </script>
 </body>
-</html>
+</html><!-- ── PAGE: REPORTS (Agency) ──────────────────────────── -->
+<div class="page" id="page-reports" style="display:none">
+  <div class="topbar">
+    <button class="topbar-hamburger" id="btnHamburger2" aria-label="Menu" onclick="toggleSidebar()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="topbar-title">Relatórios PDF <span style="font-size:.6rem;background:rgba(192,132,252,0.12);color:#c084fc;border:1px solid rgba(192,132,252,0.25);border-radius:4px;padding:.15rem .5rem;margin-left:.5rem;letter-spacing:.05em;vertical-align:middle">AGENCY</span></div>
+  </div>
+  <div class="main-content" id="reports-content">
+    <div id="reports-agency-gate" style="display:none">
+      <div class="empty" style="padding:3rem 1rem;max-width:480px;margin:0 auto;text-align:center">
+        <div style="width:56px;height:56px;background:rgba(192,132,252,0.1);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 1.2rem">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <h3 style="font-family:var(--font-display);font-size:1.1rem;margin-bottom:.6rem">Plano Agency necessário</h3>
+        <p style="font-size:.85rem;color:var(--muted);line-height:1.7;margin-bottom:1.5rem">Os relatórios PDF mensais automáticos são exclusivos do plano Agency (€25/mês).<br>Envia relatórios profissionais directamente para os teus clientes.</p>
+        <button class="btn btn-accent" onclick="nav('billing')">Ver planos e preços →</button>
+      </div>
+    </div>
+
+    <div id="reports-agency-content" style="display:none">
+      <!-- Selector de site -->
+      <div class="card" style="margin-bottom:1.2rem">
+        <div class="card-title">Configurar Relatório</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+          <div>
+            <label class="form-label">Site</label>
+            <select id="report-site-select" class="form-input" onchange="loadReportSettings()">
+              <option value="">Seleciona um site...</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Nome do cliente</label>
+            <input id="report-client-name" class="form-input" placeholder="Ex: João Silva / Empresa XYZ">
+          </div>
+          <div>
+            <label class="form-label">Email do cliente</label>
+            <input id="report-client-email" class="form-input" type="email" placeholder="cliente@exemplo.com">
+          </div>
+          <div>
+            <label class="form-label">Teu nome / agência</label>
+            <input id="report-agency-name" class="form-input" placeholder="O teu nome ou empresa">
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-top:1rem">
+          <input type="checkbox" id="report-monthly" style="accent-color:var(--accent)" checked>
+          <label for="report-monthly" style="font-size:.82rem;color:var(--muted);cursor:pointer">Enviar automaticamente no início de cada mês</label>
+        </div>
+        <div style="display:flex;gap:.8rem;margin-top:1.2rem">
+          <button class="btn btn-accent" onclick="saveReportSettings()">Guardar configuração</button>
+          <button class="btn" onclick="previewReport()" style="background:var(--s3)">Pré-visualizar relatório</button>
+          <button class="btn btn-success" onclick="sendReportNow()" id="send-report-btn">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Enviar agora
+          </button>
+        </div>
+        <div id="report-msg" class="form-success" style="display:none;margin-top:.8rem"></div>
+        <div id="report-err" class="form-error" style="display:none;margin-top:.8rem"></div>
+      </div>
+
+      <!-- Histórico -->
+      <div class="card">
+        <div class="card-title">Relatórios Enviados</div>
+        <div id="reports-history" style="margin-top:1rem">
+          <div class="empty"><p>Nenhum relatório enviado ainda.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── PAGE: BILLING ────────────────────────────────────── -->
+<div class="page" id="page-billing" style="display:none">
+  <div class="topbar">
+    <button class="topbar-hamburger" aria-label="Menu" onclick="toggleSidebar()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="topbar-title">Plano & Faturação</div>
+  </div>
+  <div class="main-content">
+
+    <!-- Estado actual da subscrição -->
+    <div class="card" style="margin-bottom:1.2rem" id="billing-current-plan">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+        <div>
+          <div class="card-title" style="margin-bottom:.3rem">Plano actual</div>
+          <div id="billing-plan-display" style="font-size:.85rem;color:var(--muted)">A carregar...</div>
+        </div>
+        <div style="display:flex;gap:.7rem;flex-wrap:wrap">
+          <button class="btn" onclick="openBillingPortal()" style="background:var(--s3);font-size:.8rem" id="billing-portal-btn">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+            Gerir faturação
+          </button>
+        </div>
+      </div>
+      <!-- Trial info se aplicável -->
+      <div id="billing-trial-info" style="display:none;margin-top:1rem;padding:.8rem 1rem;background:rgba(0,212,160,0.06);border:1px solid rgba(0,212,160,0.15);border-radius:10px;font-size:.8rem;color:var(--muted)">
+        <strong style="color:var(--accent)">✦ Período de teste activo</strong> — 14 dias grátis. Nenhum pagamento até ao fim do período.
+      </div>
+    </div>
+
+    <!-- Cards de planos -->
+    <div style="margin-bottom:1rem">
+      <div class="card-title" style="margin-bottom:.1rem;font-size:.85rem">Escolhe o teu plano</div>
+      <div style="font-size:.75rem;color:var(--dim)">14 dias grátis em qualquer plano · Cancelas quando quiseres</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;margin-bottom:1.5rem" id="billing-plans-grid">
+
+      <!-- STARTER -->
+      <div class="billing-plan-card" id="bplan-starter" data-plan="starter">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+          <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;color:var(--dim);letter-spacing:.1em;text-transform:uppercase">Starter</div>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:.2rem;margin-bottom:.5rem">
+          <span style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;letter-spacing:-.03em">€7</span>
+          <span style="font-size:.72rem;color:var(--dim)">/mês</span>
+        </div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:1rem">Até 5 sites</div>
+        <button class="btn billing-subscribe-btn" data-plan="starter" onclick="subscribePlan('starter')" style="width:100%;font-size:.78rem;padding:.6rem">
+          Escolher Starter
+        </button>
+      </div>
+
+      <!-- PROFESSIONAL -->
+      <div class="billing-plan-card featured" id="bplan-professional" data-plan="professional">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+          <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;color:var(--accent);letter-spacing:.1em;text-transform:uppercase">Professional</div>
+          <span style="font-size:.58rem;background:rgba(0,212,160,0.1);color:var(--accent);border:1px solid rgba(0,212,160,0.2);border-radius:4px;padding:.1rem .4rem;font-weight:700;letter-spacing:.05em">POPULAR</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:.2rem;margin-bottom:.5rem">
+          <span style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;letter-spacing:-.03em">€15</span>
+          <span style="font-size:.72rem;color:var(--dim)">/mês</span>
+        </div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:1rem">Até 15 sites</div>
+        <button class="btn btn-accent billing-subscribe-btn" data-plan="professional" onclick="subscribePlan('professional')" style="width:100%;font-size:.78rem;padding:.6rem">
+          Escolher Professional
+        </button>
+      </div>
+
+      <!-- AGENCY -->
+      <div class="billing-plan-card" id="bplan-agency" data-plan="agency">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.8rem">
+          <div style="font-family:var(--font-display);font-size:.72rem;font-weight:700;color:#c084fc;letter-spacing:.1em;text-transform:uppercase">Agency</div>
+          <span style="font-size:.58rem;background:rgba(192,132,252,0.1);color:#c084fc;border:1px solid rgba(192,132,252,0.2);border-radius:4px;padding:.1rem .4rem;font-weight:700;letter-spacing:.05em">PDF</span>
+        </div>
+        <div style="display:flex;align-items:baseline;gap:.2rem;margin-bottom:.5rem">
+          <span style="font-family:var(--font-display);font-size:1.8rem;font-weight:800;letter-spacing:-.03em">€25</span>
+          <span style="font-size:.72rem;color:var(--dim)">/mês</span>
+        </div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:.3rem">Sites ilimitados</div>
+        <div style="font-size:.68rem;color:#c084fc;margin-bottom:.7rem">+ Relatórios PDF para clientes</div>
+        <button class="btn billing-subscribe-btn" data-plan="agency" onclick="subscribePlan('agency')" style="width:100%;font-size:.78rem;padding:.6rem;border:1px solid rgba(192,132,252,0.25);color:#c084fc;background:rgba(192,132,252,0.06)">
+          Escolher Agency
+        </button>
+      </div>
+
+    </div>
+
+    <div id="billing-msg" style="display:none;padding:.8rem 1rem;border-radius:10px;font-size:.82rem;margin-bottom:1rem"></div>
+
+    <!-- Nota Stripe -->
+    <div style="padding:.9rem 1.1rem;background:var(--s2);border:1px solid var(--border);border-radius:12px;display:flex;align-items:center;gap:.8rem;font-size:.75rem;color:var(--dim)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+      <span>Pagamentos processados via <strong style="color:var(--muted)">Stripe</strong> — cartão de crédito e <strong style="color:var(--muted)">MBWay</strong> (Portugal). Os teus dados financeiros nunca passam pelos nossos servidores.</span>
+    </div>
+
+  </div>
+</div>
