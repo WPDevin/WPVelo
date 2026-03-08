@@ -1118,13 +1118,20 @@ function buildSitesList(sites){
 }
 
 // ── SITE DETAIL ───────────────────────────────────────────
+// Guarda os IDs já analisados nesta sessão — evita re-análise automática
+const analysedSites = new Set();
+
 function showSiteDetail(siteId){
   currentSiteId=siteId;
   const s=allSites.find(x=>String(x.id)===String(siteId));
   if(!s){nav('sites');return;}
   nav('site-detail');
   renderSiteDetail(s);
-  runAnalysis(siteId);
+  // Só corre análise automaticamente na primeira visita a este site na sessão
+  if(!analysedSites.has(siteId)){
+    analysedSites.add(siteId);
+    runAnalysis(siteId);
+  }
   loadCommandHistory(siteId);
 }
 
@@ -1373,11 +1380,7 @@ function renderSiteDetail(s){
             </div>`).join('')}
         </div>
         ${rd.server ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem">
-          ${rd.server.disk_total_gb!=null?`<div style="background:var(--s2);border-radius:8px;padding:.65rem .9rem;border:1px solid var(--border)">
-            <div style="font-size:.6rem;color:var(--dim);margin-bottom:.2rem">Disco</div>
-            <div style="font-size:.92rem;font-weight:700">${rd.server.disk_used_pct}% usado</div>
-            <div style="font-size:.6rem;color:var(--dim)">${rd.server.disk_free_gb} GB livres</div>
-          </div>`:''}
+          ${
           ${wordpress.db_size_mb?`<div style="background:var(--s2);border-radius:8px;padding:.65rem .9rem;border:1px solid var(--border)">
             <div style="font-size:.6rem;color:var(--dim);margin-bottom:.2rem">Base de dados</div>
             <div style="font-size:.92rem;font-weight:700">${wordpress.db_size_mb} MB</div>
